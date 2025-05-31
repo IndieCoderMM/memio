@@ -36,7 +36,7 @@ const Board = () => {
       boardWidth={500}
       allowDragOutsideBoard
       customSquareStyles={squareStyles}
-      onPieceDropOffBoard={(square, piece) => {
+      onPieceDropOffBoard={(square) => {
         setBoard({ ...board, [square]: "" });
       }}
       onPieceDrop={(srcSquare, targetSquare, piece) => {
