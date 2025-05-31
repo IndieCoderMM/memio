@@ -1,8 +1,8 @@
 "use client";
 
+import PieceButton from "../blocks/piece-button";
 import { useChessStore } from "../hooks/use-chess-store";
 import { ChessPiece } from "../types";
-import PieceButton from "../ui/piece-button";
 
 type Button = {
   piece: ChessPiece;
@@ -44,7 +44,7 @@ const EditorBar = () => {
   };
 
   return (
-    <div className="flex flex-col gap-2">
+    <div className="bg-surface flex flex-col gap-2 rounded-lg p-2">
       <div className="grid grid-cols-6">
         {buttons.white.map(({ piece, label, variant }) => (
           <PieceButton
@@ -70,9 +70,6 @@ const EditorBar = () => {
           </PieceButton>
         ))}
       </div>
-      <PieceButton onClick={() => setActivePiece(null)}>
-        Clear Selection
-      </PieceButton>
     </div>
   );
 };
