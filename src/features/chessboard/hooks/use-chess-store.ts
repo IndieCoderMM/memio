@@ -1,12 +1,18 @@
 import { create } from "zustand";
-import { ChessBoard, ChessPiece } from "../types";
+import { ChessBoard, ChessPiece, ChessSquare } from "../types";
 
 interface ChessStore {
   board: ChessBoard;
   activePiece: ChessPiece | null;
+  mode: "view" | "edit" | "check";
+  boardKey: string | null; // ? key for saving/loading boards
+  errorSquares: ChessSquare[]; // ? to track differences between boards
+  setMode: (mode: "view" | "edit" | "check") => void;
   setBoard: (newPosition: ChessBoard) => void;
   resetBoard: () => void;
   setActivePiece: (piece: ChessPiece | null) => void;
+  setBoardKey: (key: string | null) => void;
+  setErrorSquares: (squares: ChessSquare[]) => void;
 }
 
 const board: ChessBoard = {
@@ -45,9 +51,15 @@ const board: ChessBoard = {
 } as const;
 
 export const useChessStore = create<ChessStore>((set) => ({
-  board: board,
+  board,
   activePiece: null,
-  resetBoard: () => set({ board: board }),
+  mode: "view",
+  boardKey: null,
+  errorSquares: [],
+  resetBoard: () => set({ board }),
   setBoard: (newPosition: ChessBoard) => set({ board: newPosition }),
   setActivePiece: (piece: ChessPiece | null) => set({ activePiece: piece }),
+  setMode: (mode: "view" | "edit" | "check") => set({ mode }),
+  setBoardKey: (key: string | null) => set({ boardKey: key }),
+  setErrorSquares: (squares: ChessSquare[]) => set({ errorSquares: squares }),
 }));
