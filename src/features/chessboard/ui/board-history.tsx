@@ -1,14 +1,16 @@
+"use client";
+
 import { fromDate } from "@/utils/day";
 import Logger from "@/utils/logger";
 import { cn } from "@/utils/tailwind";
 import { HistoryIcon, Trash2Icon } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useChessStore } from "../hooks/use-chess-store";
 import { encodeId } from "../utils/helpers";
 import { getSavedBoards, replaceBoards } from "../utils/storage";
 
 const BoardHistory = () => {
-  const [boards, setBoards] = useState(() => getSavedBoards());
+  const [boards, setBoards] = useState<Record<string, string> | null>(null);
   const activeKey = useChessStore((state) => state.boardKey);
 
   const setActivePiece = useChessStore((state) => state.setActivePiece);
@@ -16,6 +18,15 @@ const BoardHistory = () => {
   const setMode = useChessStore((state) => state.setMode);
   const setBoardKey = useChessStore((state) => state.setBoardKey);
   const setErrorSquares = useChessStore((state) => state.setErrorSquares);
+
+  useEffect(() => {
+    const initialBoards = getSavedBoards();
+    if (initialBoards) {
+      setBoards(initialBoards);
+    } else {
+      Logger.info("BoardHistory", "No saved boards found.");
+    }
+  }, []);
 
   const refreshBoards = () => {
     const updatedBoards = getSavedBoards();
