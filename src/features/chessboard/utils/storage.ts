@@ -18,18 +18,27 @@ export const saveBoard = (board: ChessBoard) => {
   return key;
 };
 
-export const getBoard = (key: string): ChessBoard | null => {
+export const getSavedBoards = (): Record<string, string> | null => {
   const savedBoards = localStorage.getItem(KEY);
   if (!savedBoards) {
     return null;
   }
 
   const boards = JSON.parse(savedBoards);
-  const boardString = boards[key];
 
-  if (boardString) {
-    return JSON.parse(boardString);
+  return boards;
+};
+
+export const getBoard = (key: string): ChessBoard | null => {
+  const boards = getSavedBoards();
+  if (!boards || !boards[key]) {
+    return null;
   }
 
-  return null;
+  const boardString = boards[key];
+  return JSON.parse(boardString);
+};
+
+export const replaceBoards = (boards: Record<string, string>) => {
+  localStorage.setItem(KEY, JSON.stringify(boards));
 };

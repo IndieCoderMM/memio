@@ -5,6 +5,7 @@ import { useChessStore } from "./use-chess-store";
 
 export const useBoardControls = () => {
   const board = useChessStore((state) => state.board);
+  const loadedKey = useChessStore((state) => state.boardKey);
   const setActivePiece = useChessStore((state) => state.setActivePiece);
   const setBoard = useChessStore((state) => state.setBoard);
   const setMode = useChessStore((state) => state.setMode);
@@ -17,12 +18,17 @@ export const useBoardControls = () => {
     setActivePiece(null);
     setMode("view");
     setErrorSquares([]);
+    setBoardKey(null);
   };
 
   const handleRecall = () => {
-    // Save the current board to local storage and set key
-    const key = saveBoard(board);
-    setBoardKey(key);
+    // If loadedKey exists, the board is already saved
+    if (!loadedKey) {
+      // Save the current board to local storage and set key
+      const key = saveBoard(board);
+      setBoardKey(key);
+    }
+
     // Reset the board and mode
     setBoard({});
     setMode("edit");

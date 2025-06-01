@@ -13,7 +13,6 @@ const Board = () => {
   const setBoard = useChessStore((state) => state.setBoard);
 
   const handleSquareClick = (square: ChessSquare) => {
-    console.log("Square clicked:", square);
     if (!activePiece) return;
 
     setBoard({ ...board, [square]: activePiece });
