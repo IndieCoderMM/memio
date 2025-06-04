@@ -3,7 +3,7 @@
 import { fromDate } from "@/utils/day";
 import Logger from "@/utils/logger";
 import { cn } from "@/utils/tailwind";
-import { HistoryIcon, Trash2Icon } from "lucide-react";
+import { RefreshCwIcon, Trash2Icon } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useChessStore } from "../hooks/use-chess-store";
 import { encodeId } from "../utils/helpers";
@@ -68,17 +68,18 @@ const BoardHistory = () => {
   });
 
   return (
-    <div className="my-auto flex flex-col justify-between">
-      <div className="mb-1 flex w-full items-center justify-between">
+    <div className="flex flex-col justify-between">
+      <div className="mb-1 flex w-full items-center justify-between px-2">
         <h2 className="text-md font-semibold">
-          <HistoryIcon className="text-md text-accent-blue mr-1 inline" />
           <span className="text-accent-blue">Board History</span>
         </h2>
         <button
           onClick={refreshBoards}
-          className="text-accent-green ml-2 cursor-pointer underline hover:brightness-125"
+          className="text-accent-green cursor-pointer underline transition-transform hover:brightness-125 active:rotate-180"
+          aria-label="Refresh history"
+          title="Refresh history"
         >
-          Refresh
+          <RefreshCwIcon className="inline h-5 w-5" />
         </button>
       </div>
       <ul className="bg-surface flex max-h-[300px] min-h-[250px] flex-col gap-2 overflow-y-auto rounded-sm p-2">
@@ -115,7 +116,9 @@ const HistoryItem = ({
     <div
       className={cn(
         "bg-elevated flex items-center justify-between rounded-sm px-2 py-1",
-        isActive ? "border-accent-yellow border" : "hover:brightness-110",
+        isActive
+          ? "border-accent-yellow/30 border shadow-md"
+          : "shadow-sm hover:brightness-110",
       )}
     >
       <div>
@@ -130,7 +133,7 @@ const HistoryItem = ({
         <span className="block text-sm text-gray-100">{fromDate(date)}</span>
       </div>
       <button
-        className="text-accent-red/70 cursor-pointer hover:brightness-125"
+        className="text-accent-red/70 cursor-pointer brightness-75 hover:brightness-125"
         onClick={() => handleDelete(id)}
         aria-label="Delete board"
         title="Delete board"

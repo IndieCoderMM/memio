@@ -39,7 +39,7 @@ const BoardStatus = () => {
   return (
     <div className="flex w-full items-center justify-between">
       <div
-        className={`flex items-center gap-2 rounded-xl px-4 py-2 text-white ${color} shadow-md`}
+        className={`flex items-center gap-2 rounded-md px-4 py-2 text-white ${color} shadow-lg`}
       >
         <div className="">{icon}</div>
         <h2 className="text-sm font-medium">{text}</h2>

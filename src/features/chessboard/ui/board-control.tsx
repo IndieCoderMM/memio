@@ -2,6 +2,7 @@
 
 import Button from "@/components/blocks/button";
 import { MoveIcon, SearchIcon, ShuffleIcon } from "lucide-react";
+import TimerClock from "../blocks/timer-clock";
 import { useBoardControls } from "../hooks/use-board-controls";
 import { useChessStore } from "../hooks/use-chess-store";
 import BoardHistory from "./board-history";
@@ -36,8 +37,15 @@ const BoardControl = () => {
           </div>
         </div>
       ) : (
-        <div className="flex flex-1 flex-col gap-2">
-          <BoardHistory />
+        <div className="flex w-full flex-1 flex-col gap-2">
+          <div className="grid w-full grid-cols-5">
+            <div className="col-span-2 p-2">
+              <TimerClock />
+            </div>
+            <div className="col-span-3 p-2">
+              <BoardHistory />
+            </div>
+          </div>
           <div className="mt-auto flex w-full items-center gap-4 px-4 pb-8">
             <Button
               onClick={() => handleRandomize(16)}
