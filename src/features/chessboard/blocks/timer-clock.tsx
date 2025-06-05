@@ -43,7 +43,7 @@ const TimerClock = () => {
   };
 
   useEffect(() => {
-    scope.current = createScope({ root }).add((self) => {
+    scope.current = createScope({ root }).add(() => {
       timer.current = createTimer({
         duration: 1000,
         loop: true,
