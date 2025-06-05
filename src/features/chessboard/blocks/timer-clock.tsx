@@ -59,7 +59,7 @@ const TimerClock = () => {
   }, []);
 
   return (
-    <div className="bg-elevated shadow-block flex w-fit flex-col items-center justify-center rounded-md px-6 py-4">
+    <div className="bg-elevated shadow-block flex w-full max-w-sm flex-col items-center justify-center rounded-md px-6 py-4">
       <div
         ref={root}
         className="relative w-fit overflow-hidden rounded-sm border border-[#333] px-3 py-1"

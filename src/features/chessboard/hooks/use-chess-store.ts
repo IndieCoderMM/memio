@@ -7,12 +7,14 @@ interface ChessStore {
   mode: "view" | "edit" | "check";
   boardKey: string | null; // ? key for saving/loading boards
   errorSquares: ChessSquare[]; // ? to track differences between boards
+  totalPieces: number;
   setMode: (mode: "view" | "edit" | "check") => void;
   setBoard: (newPosition: ChessBoard) => void;
   resetBoard: () => void;
   setActivePiece: (piece: ChessPiece | null) => void;
   setBoardKey: (key: string | null) => void;
   setErrorSquares: (squares: ChessSquare[]) => void;
+  setTotalPieces: (total: number) => void;
 }
 
 const board: ChessBoard = {
@@ -56,10 +58,12 @@ export const useChessStore = create<ChessStore>((set) => ({
   mode: "view",
   boardKey: null,
   errorSquares: [],
+  totalPieces: 10,
   resetBoard: () => set({ board }),
   setBoard: (newPosition: ChessBoard) => set({ board: newPosition }),
   setActivePiece: (piece: ChessPiece | null) => set({ activePiece: piece }),
   setMode: (mode: "view" | "edit" | "check") => set({ mode }),
   setBoardKey: (key: string | null) => set({ boardKey: key }),
   setErrorSquares: (squares: ChessSquare[]) => set({ errorSquares: squares }),
+  setTotalPieces: (total: number) => set({ totalPieces: total ? total : 1 }),
 }));
