@@ -33,10 +33,10 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${redditMono.variable} ${unicaOne.variable} ${sourceSans.variable} antialiased`}
+        className={`relative ${redditMono.variable} h-full ${unicaOne.variable} ${sourceSans.variable} antialiased`}
       >
         <Navbar />
-        {children}
+        <main className="relative min-h-screen pt-[80px]">{children}</main>
       </body>
     </html>
   );
