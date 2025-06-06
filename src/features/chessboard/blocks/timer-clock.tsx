@@ -1,28 +1,29 @@
+import { formatClock } from "@/utils/formaters";
 import { cn } from "@/utils/tailwind";
 import { createScope, createTimer, Scope, Timer } from "animejs";
 import { PauseIcon, PlayIcon, PowerIcon } from "lucide-react";
-import { useEffect, useRef, useState } from "react";
+import {
+  forwardRef,
+  useEffect,
+  useImperativeHandle,
+  useRef,
+  useState,
+} from "react";
 
-const formatClock = (millis: number, showMillis = false) => {
-  const totalSeconds = Math.floor(millis / 1000);
-  const minutes = Math.floor(totalSeconds / 60);
-
-  const seconds = totalSeconds % 60;
-  const milliseconds = millis % 1000;
-
-  const pad2 = (num: number) => String(num).padStart(2, "0");
-
-  return showMillis
-    ? `${pad2(minutes)}:${pad2(seconds)}:${pad2(Math.floor(milliseconds / 10))}`
-    : `${pad2(minutes)}:${pad2(seconds)}`;
+export type TimerClockRef = {
+  getDuration: () => number;
 };
 
-const TimerClock = () => {
+const TimerClock = forwardRef<TimerClockRef>((_, ref) => {
   const root = useRef(null);
   const scope = useRef<Scope | null>(null);
   const timer = useRef<Timer | null>(null);
   const [duration, setDuration] = useState(0);
   const [status, setStatus] = useState<"idle" | "running" | "paused">("idle");
+
+  useImperativeHandle(ref, () => ({
+    getDuration: () => duration,
+  }));
 
   const handlePlayPause = () => {
     if (!timer.current) return;
@@ -97,6 +98,8 @@ const TimerClock = () => {
       </div>
     </div>
   );
-};
+});
+
+TimerClock.displayName = "TimerClock";
 
 export default TimerClock;

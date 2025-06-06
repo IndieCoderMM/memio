@@ -32,7 +32,7 @@ const BoardStatus = () => {
             color: "bg-yellow-400/80",
           };
     }
-    return { text: "Scan Mode", icon: <ScanEye />, color: "bg-indigo-800" };
+    return { text: "Scan Mode", icon: <ScanEye />, color: "bg-sky-700" };
   };
 
   const { text, icon, color } = getStatus();

@@ -15,7 +15,7 @@ const BoardRandomizer = () => {
     if (savedSettings?.totalPieces) {
       setTotalPieces(savedSettings.totalPieces);
     }
-  }, []);
+  }, [setTotalPieces]);
 
   const handlePieceChange = (step: number) => () => {
     let newTotal = totalPieces + step;

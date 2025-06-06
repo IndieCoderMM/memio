@@ -9,13 +9,18 @@ interface ChessStore {
   boardKey: string | null; // ? key for saving/loading boards
   errorSquares: ChessSquare[]; // ? to track differences between boards
   totalPieces: number;
-  setMode: (mode: "view" | "edit" | "check") => void;
+  scanDuration: number;
+  recallDuration: number;
   setBoard: (newPosition: ChessBoard) => void;
   resetBoard: () => void;
   setActivePiece: (piece: ChessPiece | null | "eraser") => void;
   setBoardKey: (key: string | null) => void;
   setErrorSquares: (squares: ChessSquare[]) => void;
   setTotalPieces: (total: number) => void;
+  setScanDuration: (duration: number) => void;
+  setRecallDuration: (duration: number) => void;
+  setMode: (mode: "view" | "edit" | "check") => void;
+  switchMode: (mode: "view" | "edit" | "check") => void;
 }
 
 export const useChessStore = create<ChessStore>((set) => ({
@@ -25,6 +30,8 @@ export const useChessStore = create<ChessStore>((set) => ({
   boardKey: null,
   errorSquares: [],
   totalPieces: 10,
+  scanDuration: 0, // Default scan duration
+  recallDuration: 0, // Default recall duration
   resetBoard: () => set({ board: BOARD }),
   setBoard: (newPosition: ChessBoard) => set({ board: newPosition }),
   setActivePiece: (piece: ChessPiece | null | "eraser") =>
@@ -33,4 +40,20 @@ export const useChessStore = create<ChessStore>((set) => ({
   setBoardKey: (key: string | null) => set({ boardKey: key }),
   setErrorSquares: (squares: ChessSquare[]) => set({ errorSquares: squares }),
   setTotalPieces: (total: number) => set({ totalPieces: total ? total : 1 }),
+  setScanDuration: (duration: number) => set({ scanDuration: duration }),
+  setRecallDuration: (duration: number) => set({ recallDuration: duration }),
+  switchMode: (mode: "view" | "edit" | "check") =>
+    set((state) => {
+      if (state.mode === mode) return state; // No change if already in the desired mode
+
+      if (mode === "edit") {
+        return {
+          mode,
+          board: {},
+          activePiece: null,
+        };
+      }
+
+      return { mode };
+    }),
 }));
