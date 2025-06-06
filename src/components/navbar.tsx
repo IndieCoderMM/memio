@@ -1,4 +1,5 @@
 import { BookOpen, Home, Settings, User } from "lucide-react";
+import Image from "next/image";
 import Link from "next/link";
 
 const navItems = [
@@ -12,8 +13,17 @@ export default function Navbar() {
   return (
     <nav className="bg-surface absolute top-0 right-0 left-0 z-[99] border-b border-[#2c2c36]">
       <div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-3">
-        <div className="text-accent-green font-title text-2xl font-bold tracking-tight brightness-125">
-          Memio
+        <div className="flex items-center -space-x-1">
+          <Image
+            src={"/logo.png"}
+            className="h-10 w-10"
+            width={40}
+            height={40}
+            alt="logo"
+          />
+          <h1 className="text-accent-green font-title text-2xl font-bold tracking-tight brightness-110">
+            Memio
+          </h1>
         </div>
         <ul className="flex space-x-6 text-sm">
           {navItems.map(({ href, label, icon }) => (

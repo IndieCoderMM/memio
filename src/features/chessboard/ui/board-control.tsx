@@ -26,7 +26,7 @@ const BoardControl = () => {
             <TimerClock />
           </div>
           <EditorBar />
-          <div className="mt-auto flex w-full justify-between gap-4 px-4 pb-8">
+          <div className="mt-auto flex w-full justify-end gap-4 px-4 pb-8">
             <Button
               onClick={() => handleCheck(key ?? "")}
               className="flex items-center gap-2"
