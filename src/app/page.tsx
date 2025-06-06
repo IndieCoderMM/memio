@@ -5,7 +5,7 @@ export default function HomePage() {
     <div className="h-full p-8">
       <div className="mx-auto max-w-xl space-y-6">
         <header className="text-center">
-          <h1 className="text-4xl font-bold tracking-tight">Memio</h1>
+          <h1 className="font-title text-5xl tracking-tight">Memio</h1>
           <p className="mt-2 text-lg text-gray-300">
             Sharpen your mind. Train your memory.
           </p>

@@ -19,16 +19,16 @@ const PieceButton = ({
     <button
       onClick={onClick}
       className={cn(
-        "px-4 py-2 font-semibold",
+        "border-surface shadow-block cursor-pointer border px-4 py-2 font-mono font-medium",
         color === "black"
           ? "bg-elevated text-neutral-100 hover:bg-gray-500"
-          : "bg-gray-200 text-gray-800 hover:bg-gray-300",
+          : "border-border bg-gray-200 text-gray-800 hover:bg-gray-300",
         variant === "left"
           ? "rounded-l"
           : variant === "right"
             ? "rounded-r"
             : "",
-        isActive ? "bg-accent-blue" : "",
+        isActive ? "bg-accent-blue/80 text-white" : "",
       )}
     >
       {children}

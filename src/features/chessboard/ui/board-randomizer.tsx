@@ -1,12 +1,21 @@
 import Button from "@/components/blocks/button";
 import { DicesIcon, MinusIcon, PlusIcon } from "lucide-react";
+import { useEffect } from "react";
 import { useBoardControls } from "../hooks/use-board-controls";
 import { useChessStore } from "../hooks/use-chess-store";
+import { getSettings } from "../utils/storage";
 
 const BoardRandomizer = () => {
   const totalPieces = useChessStore((state) => state.totalPieces);
   const setTotalPieces = useChessStore((state) => state.setTotalPieces);
   const { handleRandomize } = useBoardControls();
+
+  useEffect(() => {
+    const savedSettings = getSettings();
+    if (savedSettings?.totalPieces) {
+      setTotalPieces(savedSettings.totalPieces);
+    }
+  }, []);
 
   const handlePieceChange = (step: number) => () => {
     let newTotal = totalPieces + step;

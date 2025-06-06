@@ -1,6 +1,6 @@
 import { diffBoards } from "../utils/diff-board";
 import { randomizeBoard } from "../utils/randomize-board";
-import { getBoard, saveBoard } from "../utils/storage";
+import { getBoard, saveBoard, saveSettings } from "../utils/storage";
 import { useChessStore } from "./use-chess-store";
 
 export const useBoardControls = () => {
@@ -19,6 +19,8 @@ export const useBoardControls = () => {
     setMode("view");
     setErrorSquares([]);
     setBoardKey(null);
+    // Save preferred total pieces
+    saveSettings({ totalPieces });
   };
 
   const handleRecall = () => {

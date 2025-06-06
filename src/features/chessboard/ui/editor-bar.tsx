@@ -1,5 +1,7 @@
 "use client";
 
+import Button from "@/components/blocks/button";
+import { BoxSelectIcon, EraserIcon, TrashIcon } from "lucide-react";
 import PieceButton from "../blocks/piece-button";
 import { useChessStore } from "../hooks/use-chess-store";
 import { ChessPiece } from "../types";
@@ -38,6 +40,7 @@ const buttons: Buttons = {
 const EditorBar = () => {
   const activePiece = useChessStore((state) => state.activePiece);
   const setActivePiece = useChessStore((state) => state.setActivePiece);
+  const setBoard = useChessStore((state) => state.setBoard);
 
   const handlePieceClick = (piece: ChessPiece) => () => {
     setActivePiece(piece);
@@ -69,6 +72,33 @@ const EditorBar = () => {
             {label}
           </PieceButton>
         ))}
+      </div>
+      <div className="grid grid-cols-3">
+        <PieceButton
+          onClick={() => setActivePiece(null)}
+          variant={"left"}
+          color="black"
+        >
+          <BoxSelectIcon className="mr-4 inline h-4 w-4" />
+          Unselect
+        </PieceButton>
+        <PieceButton
+          onClick={() => setActivePiece("eraser")}
+          variant={"middle"}
+          color="black"
+          isActive={activePiece === "eraser"}
+        >
+          <EraserIcon className="mr-4 inline h-4 w-4" />
+          Eraser
+        </PieceButton>
+        <PieceButton
+          onClick={() => setBoard({})}
+          variant={"right"}
+          color="black"
+        >
+          <TrashIcon className="mr-4 inline h-4 w-4" />
+          Reset
+        </PieceButton>
       </div>
     </div>
   );

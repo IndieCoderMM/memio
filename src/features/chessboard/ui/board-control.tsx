@@ -1,7 +1,7 @@
 "use client";
 
 import Button from "@/components/blocks/button";
-import { CastleIcon, SearchIcon } from "lucide-react";
+import { CastleIcon, SearchCheckIcon } from "lucide-react";
 import TimerClock from "../blocks/timer-clock";
 import { useBoardControls } from "../hooks/use-board-controls";
 import { useChessStore } from "../hooks/use-chess-store";
@@ -13,7 +13,6 @@ import EditorBar from "./editor-bar";
 const BoardControl = () => {
   const mode = useChessStore((s) => s.mode);
   const key = useChessStore((state) => state.boardKey);
-  const setActivePiece = useChessStore((state) => state.setActivePiece);
   const { handleRecall, handleCheck } = useBoardControls();
 
   return (
@@ -22,17 +21,17 @@ const BoardControl = () => {
         <BoardStatus />
       </div>
       {mode === "edit" ? (
-        <div className="flex flex-col gap-2">
+        <div className="flex h-full flex-col items-center justify-between gap-2 p-4">
+          <div className="self-start">
+            <TimerClock />
+          </div>
           <EditorBar />
           <div className="mt-auto flex w-full justify-between gap-4 px-4 pb-8">
-            <Button onClick={() => setActivePiece(null)}>
-              Clear Selection
-            </Button>
             <Button
               onClick={() => handleCheck(key ?? "")}
               className="flex items-center gap-2"
             >
-              <SearchIcon />
+              <SearchCheckIcon />
               Check
             </Button>
           </div>
@@ -51,7 +50,7 @@ const BoardControl = () => {
           <div className="mt-auto flex w-full items-center justify-end gap-4 px-4 pb-8">
             <Button onClick={handleRecall} className="flex items-center gap-2">
               <CastleIcon />
-              Start Recalling
+              Start Recall
             </Button>
           </div>
         </div>

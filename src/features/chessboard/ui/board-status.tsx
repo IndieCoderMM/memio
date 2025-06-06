@@ -1,6 +1,7 @@
 "use client";
 
-import { BrainIcon, CheckCircle, ScanEye, XCircle } from "lucide-react";
+import { cn } from "@/utils/tailwind";
+import { BrainIcon, FrownIcon, PartyPopperIcon, ScanEye } from "lucide-react";
 import { useChessStore } from "../hooks/use-chess-store";
 import { encodeId } from "../utils/helpers";
 
@@ -14,41 +15,41 @@ const BoardStatus = () => {
   const getStatus = () => {
     if (mode === "edit")
       return {
-        text: `Recalling Board`,
+        text: `Recall Mode`,
         icon: <BrainIcon />,
-        color: "bg-accent-green",
+        color: "bg-teal-700",
       };
     if (mode === "check") {
       return errorCount > 0
         ? {
-            text: `Mistakes: ${errorCount}`,
-            icon: <XCircle />,
+            text: `${errorCount} Mistakes!`,
+            icon: <FrownIcon />,
             color: "bg-accent-red",
           }
         : {
             text: "Correct!",
-            icon: <CheckCircle />,
-            color: "bg-accent-yellow",
+            icon: <PartyPopperIcon />,
+            color: "bg-yellow-400/80",
           };
     }
-    return { text: "Viewing", icon: <ScanEye />, color: "bg-accent-blue" };
+    return { text: "Scan Mode", icon: <ScanEye />, color: "bg-indigo-800" };
   };
 
   const { text, icon, color } = getStatus();
 
   return (
-    <div className="flex w-full items-center justify-between">
-      <div
-        className={`flex items-center gap-2 rounded-md px-4 py-2 text-white ${color} shadow-lg`}
-      >
-        <div className="">{icon}</div>
-        <h2 className="text-sm font-medium">{text}</h2>
+    <div className="flex w-full items-center justify-between px-2">
+      <div className={`flex items-center gap-2 shadow-lg`}>
+        <div className={cn("rounded-sm p-2", color)}>{icon}</div>
+        <h2 className="text-text-main text-base font-medium uppercase">
+          {text}
+        </h2>
       </div>
 
       {boardKey ? (
         <div className={`flex items-center gap-2 rounded-xl`}>
-          <h2 className="text-sm font-medium">
-            Board ID: {encodeId(Number(boardKey))}
+          <h2 className="font-mono text-sm font-medium">
+            Board {encodeId(Number(boardKey))}
           </h2>
         </div>
       ) : null}

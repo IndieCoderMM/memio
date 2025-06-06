@@ -14,6 +14,10 @@ const Board = () => {
 
   const handleSquareClick = (square: ChessSquare) => {
     if (!activePiece) return;
+    if (activePiece === "eraser") {
+      setBoard({ ...board, [square]: "" });
+      return;
+    }
 
     setBoard({ ...board, [square]: activePiece });
   };
@@ -35,6 +39,7 @@ const Board = () => {
       boardWidth={500}
       allowDragOutsideBoard
       customSquareStyles={squareStyles}
+      onPromotionCheck={() => false}
       onPieceDropOffBoard={(square) => {
         setBoard({ ...board, [square]: "" });
       }}

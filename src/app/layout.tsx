@@ -1,15 +1,22 @@
 import Navbar from "@/components/navbar";
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import { Reddit_Mono, Source_Sans_3, Unica_One } from "next/font/google";
 import "./globals.css";
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
+const redditMono = Reddit_Mono({
+  variable: "--font-mono",
   subsets: ["latin"],
+  weight: "400",
 });
 
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
+const unicaOne = Unica_One({
+  variable: "--font-title",
+  subsets: ["latin"],
+  weight: "400",
+});
+
+const sourceSans = Source_Sans_3({
+  variable: "--font-body",
   subsets: ["latin"],
 });
 
@@ -26,7 +33,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+        className={`${redditMono.variable} ${unicaOne.variable} ${sourceSans.variable} antialiased`}
       >
         <Navbar />
         {children}

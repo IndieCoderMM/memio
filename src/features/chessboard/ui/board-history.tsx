@@ -70,8 +70,8 @@ const BoardHistory = () => {
   return (
     <div className="flex flex-col justify-between">
       <div className="mb-1 flex w-full items-center justify-between px-2">
-        <h2 className="text-md font-semibold">
-          <span className="text-accent-blue">Board History</span>
+        <h2 className="text-md">
+          <span className="text-text-muted">Board History</span>
         </h2>
         <button
           onClick={refreshBoards}
@@ -124,16 +124,18 @@ const HistoryItem = ({
       <div>
         <button
           onClick={() => handleLoad(id)}
-          className="text-accent-green cursor-pointer text-lg underline hover:brightness-125"
+          className="text-accent-green cursor-pointer font-mono text-lg underline hover:brightness-125"
           aria-label={`View board`}
           title={`View board`}
         >
           {encodeId(Number(id))}
         </button>
-        <span className="block text-sm text-gray-100">{fromDate(date)}</span>
+        <span className="text-text-muted/80 block text-xs">
+          {fromDate(date)}
+        </span>
       </div>
       <button
-        className="text-accent-red/70 cursor-pointer brightness-75 hover:brightness-125"
+        className="text-accent-red cursor-pointer hover:brightness-125"
         onClick={() => handleDelete(id)}
         aria-label="Delete board"
         title="Delete board"

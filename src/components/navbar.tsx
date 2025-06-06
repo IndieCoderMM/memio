@@ -12,7 +12,7 @@ export default function Navbar() {
   return (
     <nav className="bg-surface border-b border-[#2c2c36]">
       <div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-3">
-        <div className="text-accent-green text-xl font-bold tracking-tight">
+        <div className="text-accent-green font-title text-2xl font-bold tracking-tight brightness-125">
           Memio
         </div>
         <ul className="flex space-x-6 text-sm">

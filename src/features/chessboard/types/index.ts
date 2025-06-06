@@ -9,3 +9,7 @@ export type ChessPiece = Piece;
 export type ChessSquare = Square;
 
 export type ChessBoard = BoardPosition;
+
+export type BoardSetting = {
+  totalPieces: number;
+};
