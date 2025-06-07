@@ -35,6 +35,14 @@ export default function HomePage() {
             </li>
             <li>
               <Link
+                href="/numbers"
+                className="bg-elevated hover:bg-accent-green block rounded-lg px-4 py-2 transition"
+              >
+                🔢 Numbers
+              </Link>
+            </li>
+            <li>
+              <Link
                 href="/cards"
                 className="bg-elevated hover:bg-accent-blue block rounded-lg px-4 py-2 transition"
               >

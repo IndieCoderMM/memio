@@ -1,38 +1,46 @@
 import Button from "@/components/blocks/button";
 import { DicesIcon, MinusIcon, PlusIcon } from "lucide-react";
-import { useEffect } from "react";
-import { useBoardControls } from "../hooks/use-board-controls";
-import { useChessStore } from "../hooks/use-chess-store";
-import { getSettings } from "../utils/storage";
+import React from "react";
+import { useNumberStore } from "../hooks/use-number-store";
+import { generateRandomNumber } from "../utils/generate-random-num";
 
-const BoardRandomizer = () => {
-  const totalPieces = useChessStore((state) => state.totalPieces);
-  const setTotalPieces = useChessStore((state) => state.setTotalPieces);
-  const { handleRandomize } = useBoardControls();
+const NumberRandomizer = () => {
+  const digits = useNumberStore((s) => s.digits);
+  const setGeneratedNumbers = useNumberStore((s) => s.setGeneratedNumbers);
+  const setDigits = useNumberStore((s) => s.setDigits);
 
-  useEffect(() => {
-    const savedSettings = getSettings();
-    if (savedSettings?.totalPieces) {
-      setTotalPieces(savedSettings.totalPieces);
+  const handleGenerateRandom = () => {
+    if (digits <= 0) {
+      alert("Digits must be greater than 0");
+      return;
     }
-  }, [setTotalPieces]);
+
+    const num = generateRandomNumber(digits);
+    setGeneratedNumbers(num);
+  };
 
   const handlePieceChange = (step: number) => () => {
-    let newTotal = totalPieces + step;
-    if (newTotal < 1) {
-      newTotal = 1;
+    let newDigits = (isNaN(digits) ? 0 : digits) + step;
+    if (newDigits < 0) {
+      newDigits = 0;
     }
-    if (newTotal > 32) {
-      newTotal = 32;
+    if (newDigits > 100) {
+      newDigits = 100;
     }
 
-    setTotalPieces(newTotal);
+    setDigits(newDigits);
   };
 
   const onInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value.replace(/\D/g, "");
-    const newTotal = Math.max(1, Math.min(32, parseInt(value, 10)));
-    setTotalPieces(newTotal);
+    const newDigits = Math.max(0, Math.min(100, parseInt(value, 10)));
+    setDigits(newDigits);
+  };
+
+  const onInputBlur = () => {
+    if (isNaN(digits)) {
+      setDigits(0);
+    }
   };
 
   return (
@@ -40,8 +48,8 @@ const BoardRandomizer = () => {
       <div className="bg-elevated shadow-block flex w-full items-center justify-center gap-2 rounded-sm p-2">
         <button
           className="text-text-muted shadow-block cursor-pointer rounded-md bg-[#26252280] px-4 py-2 transition-colors hover:brightness-125"
-          aria-label="Remove Piece"
-          title="Remove Piece"
+          aria-label="Remove Number"
+          title="Remove Number"
           onClick={handlePieceChange(-1)}
         >
           <MinusIcon className="h-5 w-5" />
@@ -49,32 +57,33 @@ const BoardRandomizer = () => {
         <div className="text-center">
           <input
             type="number"
-            min={1}
-            max={32}
-            value={totalPieces}
+            min={0}
+            max={100}
+            value={digits}
             onChange={onInputChange}
+            onBlur={onInputBlur}
             className="text-text-main focus-within:ring-border block h-10 w-16 text-center font-mono text-xl font-semibold focus-within:ring-1 focus-within:outline-none"
           />
-          <span className="text-text-muted block text-xs">Total Pieces</span>
+          <span className="text-text-muted block text-xs">Digits</span>
         </div>
         <button
           className="text-text-muted shadow-block cursor-pointer rounded-md bg-[#26252280] px-4 py-2 transition-colors hover:brightness-125"
-          aria-label="Add Piece"
-          title="Add Piece"
+          aria-label="Add Number"
+          title="Add Number"
           onClick={handlePieceChange(1)}
         >
           <PlusIcon className="h-5 w-5" />
         </button>
       </div>
       <Button
-        onClick={() => handleRandomize(totalPieces)}
-        className="flex items-center gap-2"
+        onClick={handleGenerateRandom}
+        className="flex items-center justify-center gap-2"
       >
-        <DicesIcon />
+        <DicesIcon className="h-8 w-8" />
         Randomize
       </Button>
     </div>
   );
 };
 
-export default BoardRandomizer;
+export default NumberRandomizer;
