@@ -5,6 +5,7 @@ import ControlPanelLayout from "@/components/layouts/control-panel";
 import TimerClock, { TimerClockRef } from "@/components/widgets/timer-clock";
 import { FlameIcon, SearchCheckIcon, ThumbsDownIcon } from "lucide-react";
 import { useRef } from "react";
+import { toast } from "react-toastify";
 import { useNumberStore } from "../hooks/use-number-store";
 import { diffNumbers } from "../utils/diff-numbers";
 import { saveNum } from "../utils/storage";
@@ -29,7 +30,7 @@ const NumberControls = () => {
 
   const onRecall = () => {
     if (!generated) {
-      alert("Please generate numbers first.");
+      toast.info("Please generate numbers first");
       return;
     }
 
@@ -45,15 +46,21 @@ const NumberControls = () => {
 
   const onCheck = () => {
     if (!generated || !tried) {
-      alert("Please enter numbers first.");
+      toast.error(
+        generated
+          ? "Please fill in memorized numbers"
+          : "Please generate numbers first.",
+      );
       return;
     }
 
     const errors = diffNumbers(generated, tried);
     if (Object.keys(errors).length > 0) {
       setErrorSquares(errors);
+      toast.error(`You made ${Object.keys(errors).length} mistakes!`);
     } else {
       setErrorSquares(null);
+      toast.success(`You got all ${generated.length} numbers right!`);
     }
 
     setMode("check");

@@ -5,6 +5,7 @@ import ControlPanelLayout from "@/components/layouts/control-panel";
 import TimerClock, { TimerClockRef } from "@/components/widgets/timer-clock";
 import { FlameIcon, SearchCheckIcon } from "lucide-react";
 import { useRef } from "react";
+import { toast } from "react-toastify";
 import { useBoardControls } from "../hooks/use-board-controls";
 import { useChessStore } from "../hooks/use-chess-store";
 import BoardHistory from "./board-history";
@@ -30,7 +31,7 @@ const BoardControl = () => {
 
   const onCheck = () => {
     if (!key) {
-      alert("No board key found. Please save the board first.");
+      toast.error("Please generate a board first.");
       return;
     }
     handleCheck(key);

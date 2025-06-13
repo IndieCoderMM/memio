@@ -1,4 +1,5 @@
 import { configStorage } from "@/features/core/utils/config-storage";
+import { toast } from "react-toastify";
 import { diffBoards } from "../utils/diff-board";
 import { randomizeBoard } from "../utils/randomize-board";
 import { getBoard, saveBoard } from "../utils/storage";
@@ -45,13 +46,18 @@ export const useBoardControls = () => {
   const handleCheck = (key: string) => {
     const recalledBoard = getBoard(key);
     if (!recalledBoard) {
-      alert("No board found for the given key.");
+      toast.error("No board found with this key");
       return;
     }
 
     // Get wrong squares
     const errorSquares = diffBoards(recalledBoard, board);
     setErrorSquares(errorSquares);
+    if (Object.keys(errorSquares).length > 0) {
+      toast.error(`You made ${Object.keys(errorSquares).length} mistakes!`);
+    } else {
+      toast.success(`You got all pieces right!`);
+    }
 
     // Change view
     setBoard(recalledBoard);

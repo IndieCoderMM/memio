@@ -18,8 +18,8 @@ export default function HomePage() {
               Memio
             </h1>
           </div>
-          <p className="mt-2 text-lg text-gray-300">
-            Sharpen your mind. Train your memory.
+          <p className="mt-2 text-lg text-gray-300 capitalize">
+            Train your brain to master photographic memory
           </p>
         </header>
 
