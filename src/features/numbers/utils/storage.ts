@@ -1,4 +1,3 @@
-import Logger from "@/utils/logger";
 import { Storage } from "@/utils/Storage";
 
 const NUM_STORAGE = "savedNumbers";
@@ -14,7 +13,6 @@ export const saveNum = (num: string) => {
 export const getSavedNums = (): Record<string, string> | null => {
   const nums = numStorage.getAll();
 
-  Logger.debug(JSON.stringify(nums, null, 2), "getSavedNums");
   return nums;
 };
 

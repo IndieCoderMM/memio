@@ -5,6 +5,6 @@ Memio is a memory training application designed to help users improve their memo
 ## Todos
 
 - [x] Number memory
-- [ ] Add notification
+- [x] Add notification
 - [ ] Add binary
 - [ ] Add cards

@@ -54,6 +54,7 @@ const NumberBoard = () => {
             readOnly={mode !== "edit"}
             cbRef={(el) => (cells.current[index] = el)}
             onChange={handleChange(index)}
+            animated={mode === "view"}
             error={
               errors?.[index] && mode === "check" ? errors[index] : undefined
             }
