@@ -1,69 +1,58 @@
-"use client";
-
 import { fromDate } from "@/utils/day";
 import { Encoder } from "@/utils/Encoder";
 import Logger from "@/utils/logger";
 import { cn } from "@/utils/tailwind";
 import { LoaderIcon, RotateCwIcon, Trash2Icon } from "lucide-react";
 import { useEffect, useState } from "react";
-import { useChessStore } from "../hooks/use-chess-store";
-import { ChessBoard } from "../types";
-import { getSavedBoards, replaceBoards } from "../utils/storage";
+import { useNumberStore } from "../hooks/use-number-store";
+import { getSavedNums, replaceNums } from "../utils/storage";
 
-const BoardHistory = () => {
-  const [boards, setBoards] = useState<Record<string, ChessBoard> | null>(null);
+const NumberHistory = () => {
+  const [nums, setNums] = useState<Record<string, string> | null>(null);
   const [refreshing, setRefreshing] = useState(false);
-  const activeKey = useChessStore((state) => state.boardKey);
-
-  const setActivePiece = useChessStore((state) => state.setActivePiece);
-  const setBoard = useChessStore((state) => state.setBoard);
-  const setMode = useChessStore((state) => state.setMode);
-  const setBoardKey = useChessStore((state) => state.setBoardKey);
-  const setErrorSquares = useChessStore((state) => state.setErrorSquares);
+  const activeKey = useNumberStore((s) => s.activeKey);
+  const setGenerated = useNumberStore((s) => s.setGeneratedNumbers);
+  const setActiveKey = useNumberStore((s) => s.setActiveKey);
 
   useEffect(() => {
-    const initialBoards = getSavedBoards();
-    if (initialBoards) {
-      setBoards(initialBoards);
+    const savedNums = getSavedNums();
+    if (savedNums) {
+      setNums(savedNums);
     } else {
-      Logger.info("BoardHistory", "No saved boards found.");
+      Logger.info("NumberHistory", "No saved nums found.");
     }
   }, []);
 
-  const refreshBoards = () => {
-    const updatedBoards = getSavedBoards();
-    setBoards(updatedBoards);
+  const refreshNums = () => {
+    const nums = getSavedNums();
+    setNums(nums);
   };
 
   const handleLoad = (key: string) => {
-    if (!boards) {
-      Logger.error("BoardHistory", "No boards available to load.");
+    if (!nums) {
+      Logger.info("NumberHistory", "No nums available to load.");
       return;
     }
 
-    const recalledBoard = boards[key];
-    if (!recalledBoard) {
-      Logger.error("BoardHistory", `No board found for key: ${key}`);
+    const loadedNum = nums[key];
+    if (!loadedNum) {
+      Logger.info("NumberHistory", `No num found for key: ${key}`);
       return;
     }
 
-    // Set the board state
-    setBoard(recalledBoard);
-    setMode("view");
-    setActivePiece(null);
-    setErrorSquares([]);
-    setBoardKey(key);
+    setGenerated(loadedNum.split(""));
+    setActiveKey(key);
   };
 
   const handleDelete = (key: string) => {
-    const newBoards = { ...boards };
-    delete newBoards[key];
+    const newNums = { ...nums };
+    delete newNums[key];
 
-    replaceBoards(newBoards);
-    refreshBoards();
+    replaceNums(newNums);
+    refreshNums();
   };
 
-  const keys = boards ? Object.keys(boards) : [];
+  const keys = nums ? Object.keys(nums) : [];
 
   keys.sort((a, b) => {
     return Number(b) - Number(a); // Sort in descending order
@@ -73,15 +62,15 @@ const BoardHistory = () => {
     <div className="flex flex-col justify-between">
       <div className="mb-1 flex w-full items-center justify-between px-2">
         <h2 className="text-md">
-          <span className="text-text-muted">Board History</span>
+          <span className="text-text-muted">Saved History</span>
         </h2>
         <button
           onClick={() => {
             setRefreshing(true);
-            refreshBoards();
+            refreshNums();
             setTimeout(() => {
               setRefreshing(false);
-            }, 1000); // Simulate a short loading time
+            }, 1000);
           }}
           className="text-accent-green cursor-pointer underline transition-transform hover:brightness-125"
           aria-label="Refresh history"
@@ -158,4 +147,4 @@ const HistoryItem = ({
   );
 };
 
-export default BoardHistory;
+export default NumberHistory;

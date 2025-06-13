@@ -10,6 +10,7 @@ const NumberRandomizer = () => {
   const mode = useNumberStore((s) => s.mode);
   const setGeneratedNumbers = useNumberStore((s) => s.setGeneratedNumbers);
   const setDigits = useNumberStore((s) => s.setDigits);
+  const setActiveKey = useNumberStore((s) => s.setActiveKey);
   const reset = useNumberStore((s) => s.reset);
 
   useEffect(() => {
@@ -30,6 +31,7 @@ const NumberRandomizer = () => {
       reset();
     }
     setGeneratedNumbers(num);
+    setActiveKey(null);
     configStorage.updateSetting("numbers", { totalDigits: digits });
   };
 
@@ -94,7 +96,7 @@ const NumberRandomizer = () => {
         onClick={handleGenerateRandom}
         className="flex items-center justify-center gap-2"
       >
-        <DicesIcon className="h-8 w-8" />
+        <DicesIcon className="h-6 w-6" />
         Randomize
       </Button>
     </div>

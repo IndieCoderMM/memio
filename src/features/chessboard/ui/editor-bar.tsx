@@ -1,7 +1,7 @@
 "use client";
 
 import Button from "@/components/blocks/button";
-import { BoxSelectIcon, EraserIcon, TrashIcon } from "lucide-react";
+import { BoxSelectIcon, BrushCleaningIcon, EraserIcon } from "lucide-react";
 import PieceButton from "../blocks/piece-button";
 import { useChessStore } from "../hooks/use-chess-store";
 import { ChessPiece } from "../types";
@@ -96,7 +96,7 @@ const EditorBar = () => {
           variant={"right"}
           color="black"
         >
-          <TrashIcon className="mr-4 inline h-4 w-4" />
+          <BrushCleaningIcon className="mr-4 inline h-4 w-4" />
           Reset
         </PieceButton>
       </div>

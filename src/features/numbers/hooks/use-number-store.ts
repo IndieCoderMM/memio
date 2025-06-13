@@ -8,11 +8,13 @@ interface NumberStore {
   errorSquares: Record<number, string> | null;
   scanDuration: number;
   recallDuration: number;
+  activeKey: string | null; // Key for saving/loading numbers
   setGeneratedNumbers: (numbers: string[] | null) => void;
   setErrorSquares: (squares: Record<number, string> | null) => void;
   setDigits: (digits: number) => void;
   setScanDuration: (duration: number) => void;
   setRecallDuration: (duration: number) => void;
+  setActiveKey: (key: string | null) => void;
   reset: () => void;
   setTriedNumbers: (numbers: string[] | null) => void;
   setMode: (mode: "view" | "edit" | "check") => void;
@@ -26,6 +28,8 @@ export const useNumberStore = create<NumberStore>((set) => ({
   errorSquares: null,
   scanDuration: 0,
   recallDuration: 0,
+  activeKey: null,
+  setActiveKey: (key: string | null) => set({ activeKey: key }),
   setDigits: (digits: number) => set({ digits }),
   setGeneratedNumbers: (numbers: string[] | null) =>
     set({ generated: numbers, tried: null, errorSquares: null, mode: "view" }),

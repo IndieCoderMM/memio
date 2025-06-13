@@ -3,7 +3,7 @@
 import Button from "@/components/blocks/button";
 import ControlPanelLayout from "@/components/layouts/control-panel";
 import TimerClock, { TimerClockRef } from "@/components/widgets/timer-clock";
-import { CastleIcon, SearchCheckIcon } from "lucide-react";
+import { FlameIcon, SearchCheckIcon } from "lucide-react";
 import { useRef } from "react";
 import { useBoardControls } from "../hooks/use-board-controls";
 import { useChessStore } from "../hooks/use-chess-store";
@@ -48,7 +48,7 @@ const BoardControl = () => {
           <EditorBar />
           <div className="mt-auto flex w-full justify-end gap-4 px-4 pb-8">
             <Button onClick={onCheck} className="flex items-center gap-2">
-              <SearchCheckIcon className="h-8 w-8" />
+              <SearchCheckIcon className="h-6 w-6" />
               Check
             </Button>
           </div>
@@ -67,7 +67,7 @@ const BoardControl = () => {
           <div className="mt-auto flex w-full items-center justify-end gap-4 px-4 pb-8">
             {mode === "view" ? (
               <Button onClick={onRecall} className="flex items-center gap-2">
-                <CastleIcon className="h-8 w-8" />
+                <FlameIcon className="h-6 w-6" />
                 Start Recall
               </Button>
             ) : null}

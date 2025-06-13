@@ -1,9 +1,9 @@
 "use client";
 
+import { Encoder } from "@/utils/Encoder";
 import { cn } from "@/utils/tailwind";
 import { BrainIcon, FrownIcon, PartyPopperIcon, ScanEye } from "lucide-react";
 import { useChessStore } from "../hooks/use-chess-store";
-import { encodeId } from "../utils/helpers";
 
 const BoardStatus = () => {
   const mode = useChessStore((state) => state.mode);
@@ -49,7 +49,7 @@ const BoardStatus = () => {
       {boardKey ? (
         <div className={`flex items-center gap-2 rounded-xl`}>
           <h2 className="font-mono text-sm font-medium">
-            Board {encodeId(Number(boardKey))}
+            Board {Encoder.encodeId(Number(boardKey))}
           </h2>
         </div>
       ) : null}

@@ -1,5 +1,5 @@
 import Logger from "@/utils/logger";
-import { Storage } from "@/utils/StorageManager";
+import { Storage } from "@/utils/Storage";
 
 const CONFIG_STORAGE = "configStorage";
 

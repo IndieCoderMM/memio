@@ -46,7 +46,7 @@ const BoardRandomizer = () => {
         >
           <MinusIcon className="h-5 w-5" />
         </button>
-        <div className="text-center">
+        <div className="flex flex-1 flex-col items-center justify-center">
           <input
             type="number"
             min={1}
@@ -71,7 +71,7 @@ const BoardRandomizer = () => {
         onClick={() => handleRandomize(totalPieces)}
         className="flex items-center justify-center gap-2"
       >
-        <DicesIcon className="h-8 w-8" />
+        <DicesIcon className="h-6 w-6" />
         Randomize
       </Button>
     </div>

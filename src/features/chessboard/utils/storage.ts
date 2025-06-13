@@ -1,4 +1,5 @@
-import { Storage } from "@/utils/StorageManager";
+import Logger from "@/utils/logger";
+import { Storage } from "@/utils/Storage";
 import { ChessBoard } from "../types";
 
 const BOARD_STORAGE = "savedBoards";
@@ -14,6 +15,7 @@ export const saveBoard = (board: ChessBoard) => {
 export const getSavedBoards = (): Record<string, ChessBoard> | null => {
   const boards = boardStorage.getAll();
 
+  Logger.debug(JSON.stringify(boards, null, 2), "getSavedBoards");
   return boards;
 };
 

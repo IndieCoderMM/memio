@@ -22,8 +22,8 @@ export const useBoardControls = () => {
       setActivePiece(null);
       setMode("view");
       setErrorSquares([]);
-      setBoardKey(null);
     }
+    setBoardKey(null);
     // Save preferred total pieces
     configStorage.updateSetting("chessboard", { totalPieces });
   };

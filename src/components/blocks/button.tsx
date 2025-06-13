@@ -18,9 +18,9 @@ export default function Button({
 
   const styles = {
     primary:
-      "bg-accent-green text-white shadow-[0_4px_0_0_#4a7a3b] hover:bg-[#7fbf6b]",
+      "bg-accent-green text-text-main shadow-[0_4px_0_0_#4a7a3b] hover:bg-[#7fbf6b]",
     secondary:
-      "bg-elevated text-white shadow-[0_4px_0_0_#222222] hover:bg-[#4c4c4c]",
+      "bg-elevated text-text-main/80 shadow-[0_4px_0_0_#222222] hover:bg-[#4c4c4c]",
     outline:
       "bg-transparent border border-text-muted text-text-muted shadow-[0_4px_0_0_#4c4c4c] hover:bg-[#2e2e2e]",
     sm: "px-3 py-1 text-sm",
