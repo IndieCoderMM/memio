@@ -1,11 +1,13 @@
+import { configStorage } from "@/features/core/utils/config-storage";
 import { diffBoards } from "../utils/diff-board";
 import { randomizeBoard } from "../utils/randomize-board";
-import { getBoard, saveBoard, saveSettings } from "../utils/storage";
+import { getBoard, saveBoard } from "../utils/storage";
 import { useChessStore } from "./use-chess-store";
 
 export const useBoardControls = () => {
   const board = useChessStore((state) => state.board);
   const loadedKey = useChessStore((state) => state.boardKey);
+  const mode = useChessStore((state) => state.mode);
   const setActivePiece = useChessStore((state) => state.setActivePiece);
   const setBoard = useChessStore((state) => state.setBoard);
   const setMode = useChessStore((state) => state.setMode);
@@ -15,12 +17,15 @@ export const useBoardControls = () => {
   const handleRandomize = (totalPieces: number) => {
     const randomBoard = randomizeBoard(totalPieces);
     setBoard(randomBoard);
-    setActivePiece(null);
-    setMode("view");
-    setErrorSquares([]);
-    setBoardKey(null);
+
+    if (mode !== "view") {
+      setActivePiece(null);
+      setMode("view");
+      setErrorSquares([]);
+      setBoardKey(null);
+    }
     // Save preferred total pieces
-    saveSettings({ totalPieces });
+    configStorage.updateSetting("chessboard", { totalPieces });
   };
 
   const handleRecall = () => {

@@ -1,9 +1,9 @@
 import Button from "@/components/blocks/button";
+import { configStorage } from "@/features/core/utils/config-storage";
 import { DicesIcon, MinusIcon, PlusIcon } from "lucide-react";
 import { useEffect } from "react";
 import { useBoardControls } from "../hooks/use-board-controls";
 import { useChessStore } from "../hooks/use-chess-store";
-import { getSettings } from "../utils/storage";
 
 const BoardRandomizer = () => {
   const totalPieces = useChessStore((state) => state.totalPieces);
@@ -11,9 +11,9 @@ const BoardRandomizer = () => {
   const { handleRandomize } = useBoardControls();
 
   useEffect(() => {
-    const savedSettings = getSettings();
-    if (savedSettings?.totalPieces) {
-      setTotalPieces(savedSettings.totalPieces);
+    const config = configStorage.getSetting("chessboard");
+    if (config?.totalPieces) {
+      setTotalPieces(config.totalPieces);
     }
   }, [setTotalPieces]);
 
@@ -67,10 +67,11 @@ const BoardRandomizer = () => {
         </button>
       </div>
       <Button
+        variant="secondary"
         onClick={() => handleRandomize(totalPieces)}
-        className="flex items-center gap-2"
+        className="flex items-center justify-center gap-2"
       >
-        <DicesIcon />
+        <DicesIcon className="h-8 w-8" />
         Randomize
       </Button>
     </div>

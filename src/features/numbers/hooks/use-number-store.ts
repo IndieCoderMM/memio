@@ -5,10 +5,14 @@ interface NumberStore {
   generated: string[] | null; // Generated number
   tried: string[] | null; // User's input number
   mode: "view" | "edit" | "check"; // Mode of the number game
-  errorSquares?: Record<number, string> | null;
+  errorSquares: Record<number, string> | null;
+  scanDuration: number;
+  recallDuration: number;
   setGeneratedNumbers: (numbers: string[] | null) => void;
   setErrorSquares: (squares: Record<number, string> | null) => void;
   setDigits: (digits: number) => void;
+  setScanDuration: (duration: number) => void;
+  setRecallDuration: (duration: number) => void;
   reset: () => void;
   setTriedNumbers: (numbers: string[] | null) => void;
   setMode: (mode: "view" | "edit" | "check") => void;
@@ -20,12 +24,23 @@ export const useNumberStore = create<NumberStore>((set) => ({
   tried: null,
   mode: "view",
   errorSquares: null,
+  scanDuration: 0,
+  recallDuration: 0,
   setDigits: (digits: number) => set({ digits }),
   setGeneratedNumbers: (numbers: string[] | null) =>
     set({ generated: numbers, tried: null, errorSquares: null, mode: "view" }),
   setTriedNumbers: (numbers: string[] | null) => set({ tried: numbers }),
+  setScanDuration: (duration: number) => set({ scanDuration: duration }),
+  setRecallDuration: (duration: number) => set({ recallDuration: duration }),
   reset: () =>
-    set({ generated: null, tried: null, mode: "view", errorSquares: [] }),
+    set({
+      generated: null,
+      tried: null,
+      mode: "view",
+      errorSquares: [],
+      scanDuration: 0,
+      recallDuration: 0,
+    }),
   setMode: (mode: "view" | "edit" | "check") => set({ mode }),
   setErrorSquares: (squares: Record<number, string> | null) =>
     set({ errorSquares: squares }),

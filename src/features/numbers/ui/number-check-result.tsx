@@ -11,6 +11,8 @@ import { useNumberStore } from "../hooks/use-number-store";
 const CheckResult = () => {
   const errorSquares = useNumberStore((state) => state.errorSquares);
   const generated = useNumberStore((state) => state.generated);
+  const scanDuration = useNumberStore((state) => state.scanDuration);
+  const recallDuration = useNumberStore((state) => state.recallDuration);
   const reset = useNumberStore((state) => state.reset);
 
   const errors = Object.keys(errorSquares || {}).length;
@@ -69,7 +71,7 @@ const CheckResult = () => {
           <span className="text-lg">
             Scan Time:{" "}
             <span className="text-text-main font-mono">
-              {formatClock(0, true)}
+              {formatClock(scanDuration, true)}
             </span>
           </span>
         </div>
@@ -78,7 +80,7 @@ const CheckResult = () => {
           <span className="text-lg">
             Recall Time:{" "}
             <span className="text-text-main font-mono">
-              {formatClock(0, true)}
+              {formatClock(recallDuration, true)}
             </span>
           </span>
         </div>

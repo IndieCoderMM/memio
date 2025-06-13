@@ -14,13 +14,13 @@ export default function Button({
   ...props
 }: BaseButtonProps) {
   const base =
-    "inline-flex cursor-pointer items-center justify-center px-4 py-2 text-sm font-medium uppercase font-body rounded-xl transition-transform duration-150 active:translate-y-[2px]";
+    "inline-flex cursor-pointer items-center justify-center px-4 py-2 text-sm font-medium uppercase font-body rounded-xl transition duration-150 active:translate-y-[2px]";
 
   const styles = {
     primary:
       "bg-accent-green text-white shadow-[0_4px_0_0_#4a7a3b] hover:bg-[#7fbf6b]",
     secondary:
-      "bg-accent-surface text-white shadow-[0_4px_0_0_#333333] hover:bg-[#a0a0a0]",
+      "bg-elevated text-white shadow-[0_4px_0_0_#222222] hover:bg-[#4c4c4c]",
     outline:
       "bg-transparent border border-text-muted text-text-muted shadow-[0_4px_0_0_#4c4c4c] hover:bg-[#2e2e2e]",
     sm: "px-3 py-1 text-sm",

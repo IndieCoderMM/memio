@@ -1,13 +1,23 @@
 import Button from "@/components/blocks/button";
+import { configStorage } from "@/features/core/utils/config-storage";
 import { DicesIcon, MinusIcon, PlusIcon } from "lucide-react";
-import React from "react";
+import React, { useEffect } from "react";
 import { useNumberStore } from "../hooks/use-number-store";
 import { generateRandomNumber } from "../utils/generate-random-num";
 
 const NumberRandomizer = () => {
   const digits = useNumberStore((s) => s.digits);
+  const mode = useNumberStore((s) => s.mode);
   const setGeneratedNumbers = useNumberStore((s) => s.setGeneratedNumbers);
   const setDigits = useNumberStore((s) => s.setDigits);
+  const reset = useNumberStore((s) => s.reset);
+
+  useEffect(() => {
+    const config = configStorage.getSetting("numbers");
+    if (config?.totalDigits) {
+      setDigits(config.totalDigits);
+    }
+  }, [setDigits]);
 
   const handleGenerateRandom = () => {
     if (digits <= 0) {
@@ -16,7 +26,11 @@ const NumberRandomizer = () => {
     }
 
     const num = generateRandomNumber(digits);
+    if (mode !== "view") {
+      reset();
+    }
     setGeneratedNumbers(num);
+    configStorage.updateSetting("numbers", { totalDigits: digits });
   };
 
   const handlePieceChange = (step: number) => () => {
@@ -76,6 +90,7 @@ const NumberRandomizer = () => {
         </button>
       </div>
       <Button
+        variant="secondary"
         onClick={handleGenerateRandom}
         className="flex items-center justify-center gap-2"
       >

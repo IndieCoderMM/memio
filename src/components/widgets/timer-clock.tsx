@@ -23,6 +23,12 @@ const TimerClock = forwardRef<TimerClockRef>((_, ref) => {
 
   useImperativeHandle(ref, () => ({
     getDuration: () => duration,
+    stop: () => {
+      if (timer.current) {
+        timer.current.pause();
+        setStatus("paused");
+      }
+    },
   }));
 
   const handlePlayPause = () => {

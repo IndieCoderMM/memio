@@ -10,6 +10,4 @@ export type ChessSquare = Square;
 
 export type ChessBoard = BoardPosition;
 
-export type BoardSetting = {
-  totalPieces: number;
-};
+export type BoardSetting = ConfigType["chessboard"];

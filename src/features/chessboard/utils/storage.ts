@@ -1,58 +1,28 @@
-import { BoardSetting, ChessBoard } from "../types";
+import { Storage } from "@/utils/StorageManager";
+import { ChessBoard } from "../types";
 
-const BOARD_STORE = "savedBoards";
-const BOARD_SETTINGS = "boardSettings";
+const BOARD_STORAGE = "savedBoards";
 
-export const saveSettings = (settings: BoardSetting) => {
-  localStorage.setItem(BOARD_SETTINGS, JSON.stringify(settings));
-};
-
-export const getSettings = (): BoardSetting | null => {
-  const settings = localStorage.getItem(BOARD_SETTINGS);
-  if (!settings) {
-    return null;
-  }
-
-  return JSON.parse(settings);
-};
+const boardStorage = new Storage<ChessBoard>(BOARD_STORAGE);
 
 export const saveBoard = (board: ChessBoard) => {
-  const key = Date.now().toString();
-  const boardString = JSON.stringify(board);
-  const existingBoards = localStorage.getItem(BOARD_STORE);
-
-  if (existingBoards) {
-    const boards = JSON.parse(existingBoards);
-    boards[key] = boardString;
-    localStorage.setItem(BOARD_STORE, JSON.stringify(boards));
-  } else {
-    localStorage.setItem(BOARD_STORE, JSON.stringify({ [key]: boardString }));
-  }
+  const key = boardStorage.saveWithTimestamp(board);
 
   return key;
 };
 
-export const getSavedBoards = (): Record<string, string> | null => {
-  const savedBoards = localStorage.getItem(BOARD_STORE);
-  if (!savedBoards) {
-    return null;
-  }
-
-  const boards = JSON.parse(savedBoards);
+export const getSavedBoards = (): Record<string, ChessBoard> | null => {
+  const boards = boardStorage.getAll();
 
   return boards;
 };
 
 export const getBoard = (key: string): ChessBoard | null => {
-  const boards = getSavedBoards();
-  if (!boards || !boards[key]) {
-    return null;
-  }
+  const board = boardStorage.getItem(key);
 
-  const boardString = boards[key];
-  return JSON.parse(boardString);
+  return board;
 };
 
-export const replaceBoards = (boards: Record<string, string>) => {
-  localStorage.setItem(BOARD_STORE, JSON.stringify(boards));
+export const replaceBoards = (boards: Record<string, ChessBoard>) => {
+  boardStorage.replaceAll(boards);
 };
