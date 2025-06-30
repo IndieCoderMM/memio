@@ -7,10 +7,14 @@ const AnimatedNumber = ({
   num,
   isStatic = false,
   className,
+  max = 9,
+  duration = 1000,
 }: {
   num: number;
   isStatic?: boolean;
   className?: string;
+  max?: number;
+  duration?: number;
 }) => {
   const ref = useRef<HTMLElement | null>(null);
 
@@ -25,13 +29,18 @@ const AnimatedNumber = ({
     const animation = animate(
       { num: 0 },
       {
-        num: num,
+        num: Math.random() * max, // 0 - 9
         round: 1,
-        duration: 1000,
+        duration,
         onUpdate: (anim) => {
           const currentNum = Math.round((anim.targets[0] as any).num);
           if (ref.current) {
             ref.current.textContent = currentNum.toString();
+          }
+        },
+        onComplete: () => {
+          if (ref.current) {
+            ref.current.textContent = num.toString();
           }
         },
       },
@@ -40,7 +49,7 @@ const AnimatedNumber = ({
     return () => {
       animation.revert();
     };
-  }, [num, isStatic]);
+  }, [num, max, duration, isStatic]);
 
   return (
     <span ref={ref} className={cn(className)}>

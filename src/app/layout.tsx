@@ -1,6 +1,6 @@
 import Navbar from "@/components/navbar";
 import type { Metadata } from "next";
-import { Reddit_Mono, Source_Sans_3, Unica_One } from "next/font/google";
+import { Poppins, Reddit_Mono, Unica_One } from "next/font/google";
 import { Flip, ToastContainer } from "react-toastify";
 import "./globals.css";
 
@@ -16,9 +16,10 @@ const unicaOne = Unica_One({
   weight: "400",
 });
 
-const sourceSans = Source_Sans_3({
+const poppins = Poppins({
   variable: "--font-body",
   subsets: ["latin"],
+  weight: ["400"],
 });
 
 export const metadata: Metadata = {
@@ -34,7 +35,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`relative ${redditMono.variable} h-full ${unicaOne.variable} ${sourceSans.variable} antialiased`}
+        className={`relative ${redditMono.variable} h-full ${unicaOne.variable} ${poppins.variable} antialiased`}
       >
         <Navbar />
         <main className="relative min-h-screen pt-[80px]">{children}</main>
