@@ -38,27 +38,6 @@ const CardBoard = () => {
     }
   }, [mode]);
 
-  const handleChange =
-    (index: number): React.ChangeEventHandler<HTMLInputElement> =>
-    (e) => {
-      let value = e.target.value.replace(/\D/g, "");
-      if (value.length > 1) {
-        value = value[value.length - 1]; // Keep only the last digit
-      }
-
-      const newTried = tried ? [...tried] : Array(generated?.length).fill("");
-      newTried[index] = value;
-      setTriedCards(newTried);
-
-      if (value && cells.current[index + 1]) {
-        requestAnimationFrame(() => {
-          cells.current[index + 1]?.focus();
-        });
-      } else if (value === "" && cells.current[index - 1]) {
-        cells.current[index - 1]?.focus();
-      }
-    };
-
   const handleDrop = (e: React.DragEvent<HTMLDivElement>) => {
     e.preventDefault();
     const draggedId = e.dataTransfer.getData("text/plain");
@@ -109,6 +88,12 @@ const CardBoard = () => {
                 </div>
               );
             })}
+            {Array.from({ length: emptyCells }).map((_, index) => (
+              <div
+                key={`empty-${index}`}
+                className="bg-surface border-surface relative h-20 w-full border"
+              ></div>
+            ))}
           </div>
         )}
       </div>

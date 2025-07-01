@@ -60,6 +60,6 @@ export type ClubCard =
 
 export type EmptyCard = "00";
 
-export type Card = DiamondCard | HeartCard | SpadeCard | ClubCard | EmptyCard;
+export type Card = DiamondCard | HeartCard | SpadeCard | ClubCard;
 
 export type Deck = Card[];

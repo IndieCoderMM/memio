@@ -163,7 +163,7 @@ export const cardImages: Record<Card, StaticImageData> = {
   cj: cj,
   cq: cq,
   ck: ck,
-} as const;
+};
 
 export const smallCardImages: Record<Card, StaticImageData> = {
   d1: d1Sm,
@@ -218,4 +218,4 @@ export const smallCardImages: Record<Card, StaticImageData> = {
   cj: cjSm,
   cq: cqSm,
   ck: ckSm,
-} as const;
+};

@@ -1,17 +1,17 @@
 import { create } from "zustand";
-import { Card } from "../types";
+import { Card, EmptyCard } from "../types";
 
 interface CardStore {
   count: number;
   generated: Card[] | null; // Generated number
   tried: Card[] | null; // User's input number
   mode: "view" | "edit" | "check"; // Mode of the number game
-  errors: Record<number, Card> | null;
+  errors: Record<number, Card | EmptyCard> | null;
   scanDuration: number;
   recallDuration: number;
   activeKey: string | null; // Key for saving/loading numbers
   setGeneratedCards: (numbers: Card[] | null) => void;
-  setErrors: (squares: Record<number, Card> | null) => void;
+  setErrors: (squares: Record<number, Card | EmptyCard> | null) => void;
   setCount: (digits: number) => void;
   setScanDuration: (duration: number) => void;
   setRecallDuration: (duration: number) => void;
@@ -47,5 +47,6 @@ export const useCardStore = create<CardStore>((set) => ({
       recallDuration: 0,
     }),
   setMode: (mode: "view" | "edit" | "check") => set({ mode }),
-  setErrors: (squares: Record<number, Card> | null) => set({ errors: squares }),
+  setErrors: (squares: Record<number, Card | EmptyCard> | null) =>
+    set({ errors: squares }),
 }));

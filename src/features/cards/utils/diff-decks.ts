@@ -1,7 +1,7 @@
-import { Card, Deck } from "../types";
+import { Card, Deck, EmptyCard } from "../types";
 
 export function diffDecks(target: Deck, tried: Deck) {
-  const errors: Record<number, Card> = {};
+  const errors: Record<number, Card | EmptyCard> = {};
 
   for (let i = 0; i < target.length; i++) {
     if (target[i] !== tried[i]) {
