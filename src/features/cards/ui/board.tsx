@@ -1,7 +1,8 @@
 "use client";
 
 import Carousel from "@/components/blocks/carousel";
-import { StaticImageData } from "next/image";
+import { cn } from "@/utils/tailwind";
+import Image, { StaticImageData } from "next/image";
 import { useEffect, useRef, useState } from "react";
 import { useCardStore } from "../hooks/use-card-store";
 import { cardBackImage, cardImages } from "../utils/images";
@@ -13,7 +14,7 @@ const CardBoard = () => {
   const errors = useCardStore((s) => s.errors);
   const tried = useCardStore((s) => s.tried);
   const mode = useCardStore((s) => s.mode);
-  const setTriedNumbers = useCardStore((s) => s.setTriedCards);
+  const setTriedCards = useCardStore((s) => s.setTriedCards);
 
   const emptyCells = 52 - (generated?.length ?? 0);
 
@@ -47,7 +48,7 @@ const CardBoard = () => {
 
       const newTried = tried ? [...tried] : Array(generated?.length).fill("");
       newTried[index] = value;
-      setTriedNumbers(newTried);
+      setTriedCards(newTried);
 
       if (value && cells.current[index + 1]) {
         requestAnimationFrame(() => {
@@ -58,13 +59,57 @@ const CardBoard = () => {
       }
     };
 
+  const handleDrop = (e: React.DragEvent<HTMLDivElement>) => {
+    e.preventDefault();
+    const draggedId = e.dataTransfer.getData("text/plain");
+    const target = e.currentTarget;
+    const toIndex = parseInt(target.id, 10);
+    const newTried = tried ? [...tried] : Array(generated?.length).fill("");
+
+    newTried[toIndex] = draggedId;
+    setTriedCards(newTried);
+  };
+
   return (
     <div className="w-full">
       <div className="w-full">
-        {cards.length > 0 ? (
+        {mode === "view" && cards.length > 0 ? (
           <Carousel images={cards} />
-        ) : (
+        ) : mode === "view" ? (
           <Carousel images={[cardBackImage]} />
+        ) : (
+          <div className="grid grid-cols-10 place-items-center gap-1">
+            {generated?.map((card, index) => {
+              const cardName = mode === "edit" ? tried?.[index] : card;
+
+              return (
+                <div
+                  key={`${cardName}-${index}`}
+                  className={cn(
+                    "bg-surface border-surface relative h-20 w-full border",
+                    mode === "check" && {
+                      "border-accent-green": !errors?.[index],
+                      "border-accent-red": errors?.[index],
+                      "border-orange-700":
+                        errors?.[index] && errors[index] === "00",
+                    },
+                  )}
+                >
+                  <Image
+                    id={`${index}`}
+                    src={cardName ? cardImages[cardName] : cardBackImage}
+                    alt={`Card ${cardName}`}
+                    width={200}
+                    height={300}
+                    draggable={false}
+                    onDragOver={(e) => e.preventDefault()}
+                    onDrop={handleDrop}
+                    className={`h-full w-auto object-contain`}
+                  />
+                </div>
+              );
+            })}
+          </div>
         )}
       </div>
     </div>

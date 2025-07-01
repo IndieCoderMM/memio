@@ -1,8 +1,11 @@
 declare type ConfigType = {
   chessboard: {
-    totalPieces: number;
+    total: number;
   };
   numbers: {
-    totalDigits: number;
+    total: number;
+  };
+  cards: {
+    total: number;
   };
 };

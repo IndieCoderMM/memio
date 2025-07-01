@@ -10,6 +10,7 @@ type Props = {
 
 export default function Carousel({ images }: Props) {
   const [index, setIndex] = useState(0);
+  const [ready, setReady] = useState(false);
   const total = images.length;
   const containerRef = useRef<HTMLDivElement>(null);
   const scopeRef = useRef<ReturnType<typeof createScope> | null>(null);
@@ -27,9 +28,12 @@ export default function Carousel({ images }: Props) {
   };
 
   useEffect(() => {
+    if (!images || images.length === 0 || !ready) {
+      return;
+    }
     setIndex(0);
-    scopeRef.current?.methods.rotate(0);
-  }, [images]);
+    scopeRef.current?.methods?.rotate(0);
+  }, [images, ready]);
 
   useEffect(() => {
     const scope = createScope({ root: containerRef.current! });
@@ -55,9 +59,12 @@ export default function Carousel({ images }: Props) {
     };
 
     scope.add("rotate", (i: number) => animationInit(i));
+    setReady(true);
 
     return () => {
       scope.revert();
+      scopeRef.current = null;
+      setReady(false);
     };
   }, []);
 

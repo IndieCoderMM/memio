@@ -2,41 +2,42 @@ import Button from "@/components/blocks/button";
 import { configStorage } from "@/features/core/utils/config-storage";
 import { DicesIcon, MinusIcon, PlusIcon } from "lucide-react";
 import React, { useEffect } from "react";
+import { toast } from "react-toastify";
 import { useCardStore } from "../hooks/use-card-store";
 import { generateRandomDeck } from "../utils/gen-random-deck";
 
 const CardRandomizer = () => {
-  const digits = useCardStore((s) => s.count);
+  const count = useCardStore((s) => s.count);
   const mode = useCardStore((s) => s.mode);
   const setGeneratedCards = useCardStore((s) => s.setGeneratedCards);
-  const setDigits = useCardStore((s) => s.setCount);
+  const setCount = useCardStore((s) => s.setCount);
   const setActiveKey = useCardStore((s) => s.setActiveKey);
   const reset = useCardStore((s) => s.reset);
 
   useEffect(() => {
-    const config = configStorage.getSetting("numbers");
-    if (config?.totalDigits) {
-      setDigits(config.totalDigits);
+    const config = configStorage.getSetting("cards");
+    if (config?.total) {
+      setCount(config.total);
     }
-  }, [setDigits]);
+  }, [setCount]);
 
   const handleGenerateRandom = () => {
-    if (digits <= 0) {
-      alert("Digits must be greater than 0");
+    if (count <= 0) {
+      toast.info("Digits must be greater than 0");
       return;
     }
 
-    const num = generateRandomDeck(digits);
+    const num = generateRandomDeck(count);
     if (mode !== "view") {
       reset();
     }
     setGeneratedCards(num);
     setActiveKey(null);
-    configStorage.updateSetting("numbers", { totalDigits: digits });
+    configStorage.updateSetting("cards", { total: count });
   };
 
   const handlePieceChange = (step: number) => () => {
-    let newDigits = (isNaN(digits) ? 0 : digits) + step;
+    let newDigits = (isNaN(count) ? 0 : count) + step;
     if (newDigits < 0) {
       newDigits = 0;
     }
@@ -44,18 +45,18 @@ const CardRandomizer = () => {
       newDigits = 52;
     }
 
-    setDigits(newDigits);
+    setCount(newDigits);
   };
 
   const onInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value.replace(/\D/g, "");
     const newDigits = Math.max(0, Math.min(100, parseInt(value, 10)));
-    setDigits(newDigits);
+    setCount(newDigits);
   };
 
   const onInputBlur = () => {
-    if (isNaN(digits)) {
-      setDigits(0);
+    if (isNaN(count)) {
+      setCount(0);
     }
   };
 
@@ -75,7 +76,7 @@ const CardRandomizer = () => {
             type="number"
             min={0}
             max={52}
-            value={digits}
+            value={count}
             onChange={onInputChange}
             onBlur={onInputBlur}
             className="text-text-main focus-within:ring-border block h-10 w-16 text-center font-mono text-xl font-semibold focus-within:ring-1 focus-within:outline-none"

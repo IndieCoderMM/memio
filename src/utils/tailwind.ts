@@ -1,4 +1,4 @@
-import { clsx } from "clsx";
+import { ClassValue, clsx } from "clsx";
 import { twMerge } from "tailwind-merge";
 
 /**
@@ -6,6 +6,6 @@ import { twMerge } from "tailwind-merge";
  * @param args - Class names to combine.
  * @returns A single string of combined class names.
  */
-export function cn(...args: (string | undefined)[]) {
+export function cn(...args: ClassValue[]) {
   return twMerge(clsx(...args));
 }

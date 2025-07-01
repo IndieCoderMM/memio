@@ -1,7 +1,5 @@
 import { Storage } from "@/utils/Storage";
-import { Card } from "../types";
-
-type Deck = Card[];
+import { Deck } from "../types";
 
 const DECK_STORAGE = "savedDecks";
 

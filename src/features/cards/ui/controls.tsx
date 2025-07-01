@@ -3,24 +3,76 @@
 import Button from "@/components/blocks/button";
 import ControlPanelLayout from "@/components/layouts/control-panel";
 import TimerClock, { TimerClockRef } from "@/components/widgets/timer-clock";
-import CheckResult from "@/features/binary/ui/number-check-result";
-import NumberHistory from "@/features/binary/ui/number-history";
+import { cn } from "@/utils/tailwind";
 import { FlameIcon, SearchCheckIcon, ThumbsDownIcon } from "lucide-react";
 import { useRef } from "react";
+import { toast } from "react-toastify";
 import { useCardStore } from "../hooks/use-card-store";
+import { diffDecks } from "../utils/diff-decks";
+import { saveDeck } from "../utils/storage";
+import DeckBuilder from "./deck-builder";
+import DeckHistory from "./history";
 import CardRandomizer from "./randomizer";
+import DeckCheckResult from "./result";
 import Status from "./status";
 
 const CardControls = () => {
   const mode = useCardStore((s) => s.mode);
   const scanRef = useRef<TimerClockRef>(null);
   const recallRef = useRef<TimerClockRef>(null);
+  const generated = useCardStore((s) => s.generated);
+  const tried = useCardStore((s) => s.tried);
+  const activeKey = useCardStore((s) => s.activeKey);
+  const setMode = useCardStore((s) => s.setMode);
+  const setScanDuration = useCardStore((s) => s.setScanDuration);
+  const setRecallDuration = useCardStore((s) => s.setRecallDuration);
+  const setActiveKey = useCardStore((s) => s.setActiveKey);
+  const setErrors = useCardStore((s) => s.setErrors);
+  const reset = useCardStore((s) => s.reset);
 
-  const onRecall = () => {};
+  const onRecall = () => {
+    if (!generated) {
+      toast.info("Please shuffle cards first");
+      return;
+    }
 
-  const onCheck = () => {};
+    if (!activeKey) {
+      const key = saveDeck(generated);
+      setActiveKey(key);
+    }
 
-  const onReset = () => {};
+    setMode("edit");
+    const duration = scanRef.current?.getDuration() || 0;
+    setScanDuration(duration);
+  };
+
+  const onCheck = () => {
+    if (!generated || !tried) {
+      toast.error(
+        generated
+          ? "Please fill in memorized cards"
+          : "Please shuffle cards first.",
+      );
+      return;
+    }
+
+    const errors = diffDecks(generated, tried);
+    if (Object.keys(errors).length > 0) {
+      setErrors(errors);
+      toast.error(`You made ${Object.keys(errors).length} mistakes!`);
+    } else {
+      setErrors(null);
+      toast.success(`You got all ${generated.length} cards right!`);
+    }
+
+    setMode("check");
+    const duration = recallRef.current?.getDuration() || 0;
+    setRecallDuration(duration);
+  };
+
+  const onReset = () => {
+    reset();
+  };
 
   return (
     <ControlPanelLayout renderStatus={() => <Status />}>
@@ -32,16 +84,26 @@ const CardControls = () => {
               <CardRandomizer />
             </div>
           ) : (
-            <div className="col-span-2 flex flex-col gap-2 p-2">
-              <TimerClock key="Recall timer" ref={recallRef} />
+            <div
+              className={cn("col-span-2 flex flex-col gap-2 p-2", {
+                "col-span-3": mode === "edit",
+              })}
+            >
+              <DeckBuilder />
             </div>
           )}
-          <div className="col-span-3 p-2">
+          <div
+            className={cn("col-span-3 p-2", {
+              "col-span-2": mode === "edit",
+            })}
+          >
             {mode === "check" ? (
-              <CheckResult />
+              <DeckCheckResult />
             ) : mode === "view" ? (
-              <NumberHistory />
-            ) : null}
+              <DeckHistory />
+            ) : (
+              <TimerClock key="Recall timer" ref={recallRef} />
+            )}
           </div>
         </div>
       </div>

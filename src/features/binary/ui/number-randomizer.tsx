@@ -15,8 +15,8 @@ const NumberRandomizer = () => {
 
   useEffect(() => {
     const config = configStorage.getSetting("numbers");
-    if (config?.totalDigits) {
-      setDigits(config.totalDigits);
+    if (config?.total) {
+      setDigits(config.total);
     }
   }, [setDigits]);
 
@@ -32,7 +32,7 @@ const NumberRandomizer = () => {
     }
     setGeneratedNumbers(num);
     setActiveKey(null);
-    configStorage.updateSetting("numbers", { totalDigits: digits });
+    configStorage.updateSetting("numbers", { total: digits });
   };
 
   const handlePieceChange = (step: number) => () => {

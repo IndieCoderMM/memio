@@ -1,7 +1,7 @@
-import { Card } from "../types";
+import { Deck } from "../types";
 
-export function generateRandomDeck(count: number): Card[] {
-  const allCards: Card[] = [
+export function generateRandomDeck(count: number): Deck {
+  const allCards: Deck = [
     "d1",
     "d2",
     "d3",

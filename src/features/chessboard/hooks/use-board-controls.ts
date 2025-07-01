@@ -26,7 +26,7 @@ export const useBoardControls = () => {
     }
     setBoardKey(null);
     // Save preferred total pieces
-    configStorage.updateSetting("chessboard", { totalPieces });
+    configStorage.updateSetting("chessboard", { total: totalPieces });
   };
 
   const handleRecall = () => {

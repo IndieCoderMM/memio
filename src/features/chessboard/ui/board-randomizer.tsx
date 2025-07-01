@@ -12,8 +12,8 @@ const BoardRandomizer = () => {
 
   useEffect(() => {
     const config = configStorage.getSetting("chessboard");
-    if (config?.totalPieces) {
-      setTotalPieces(config.totalPieces);
+    if (config?.total) {
+      setTotalPieces(config.total);
     }
   }, [setTotalPieces]);
 

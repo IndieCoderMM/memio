@@ -58,4 +58,8 @@ export type ClubCard =
   | "cq"
   | "ck";
 
-export type Card = DiamondCard | HeartCard | SpadeCard | ClubCard;
+export type EmptyCard = "00";
+
+export type Card = DiamondCard | HeartCard | SpadeCard | ClubCard | EmptyCard;
+
+export type Deck = Card[];
