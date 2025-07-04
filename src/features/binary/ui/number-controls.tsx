@@ -3,6 +3,7 @@
 import Button from "@/components/blocks/button";
 import ControlPanelLayout from "@/components/layouts/control-panel";
 import TimerClock, { TimerClockRef } from "@/components/widgets/timer-clock";
+import { saveRecord } from "@/features/core/utils/record-storage";
 import { FlameIcon, SearchCheckIcon, ThumbsDownIcon } from "lucide-react";
 import { useRef } from "react";
 import { toast } from "react-toastify";
@@ -18,6 +19,7 @@ const NumberControls = () => {
   const mode = useNumberStore((s) => s.mode);
   const activeKey = useNumberStore((s) => s.activeKey);
   const generated = useNumberStore((s) => s.generated);
+  const scanDuration = useNumberStore((s) => s.scanDuration);
   const tried = useNumberStore((s) => s.tried);
   const scanRef = useRef<TimerClockRef>(null);
   const recallRef = useRef<TimerClockRef>(null);
@@ -55,7 +57,8 @@ const NumberControls = () => {
     }
 
     const errors = diffNumbers(generated, tried);
-    if (Object.keys(errors).length > 0) {
+    const errorCount = Object.keys(errors).length;
+    if (errorCount > 0) {
       setErrorSquares(errors);
       toast.error(`You made ${Object.keys(errors).length} mistakes!`);
     } else {
@@ -66,6 +69,17 @@ const NumberControls = () => {
     setMode("check");
     const duration = recallRef.current?.getDuration() || 0;
     setRecallDuration(duration);
+
+    // Save record
+    const record: SessionRecord = {
+      type: "binary",
+      total: generated.length,
+      accuracy: (generated.length - errorCount) / generated.length,
+      scan_ms: scanDuration,
+      recall_ms: duration,
+      timestamp: Date.now(),
+    };
+    saveRecord(record);
   };
 
   const onReset = () => {

@@ -1,4 +1,5 @@
 import { configStorage } from "@/features/core/utils/config-storage";
+import { saveRecord } from "@/features/core/utils/record-storage";
 import { toast } from "react-toastify";
 import { diffBoards } from "../utils/diff-board";
 import { randomizeBoard } from "../utils/randomize-board";
@@ -9,6 +10,7 @@ export const useBoardControls = () => {
   const board = useChessStore((state) => state.board);
   const loadedKey = useChessStore((state) => state.boardKey);
   const mode = useChessStore((state) => state.mode);
+  const scanDuration = useChessStore((state) => state.scanDuration);
   const setActivePiece = useChessStore((state) => state.setActivePiece);
   const setBoard = useChessStore((state) => state.setBoard);
   const setMode = useChessStore((state) => state.setMode);
@@ -43,7 +45,7 @@ export const useBoardControls = () => {
     setActivePiece(null);
   };
 
-  const handleCheck = (key: string) => {
+  const handleCheck = (key: string, recallDuration: number) => {
     const recalledBoard = getBoard(key);
     if (!recalledBoard) {
       toast.error("No board found with this key");
@@ -52,8 +54,9 @@ export const useBoardControls = () => {
 
     // Get wrong squares
     const errorSquares = diffBoards(recalledBoard, board);
+    const errorCount = Object.keys(errorSquares).length;
     setErrorSquares(errorSquares);
-    if (Object.keys(errorSquares).length > 0) {
+    if (errorCount > 0) {
       toast.error(`You made ${Object.keys(errorSquares).length} mistakes!`);
     } else {
       toast.success(`You got all pieces right!`);
@@ -62,6 +65,19 @@ export const useBoardControls = () => {
     // Change view
     setBoard(recalledBoard);
     setMode("check");
+
+    const totalPieces = Object.keys(recalledBoard).length;
+
+    // Save records
+    const records: SessionRecord = {
+      type: "chessboard",
+      total: totalPieces,
+      accuracy: (totalPieces - errorCount) / totalPieces,
+      scan_ms: scanDuration,
+      recall_ms: recallDuration,
+      timestamp: Date.now(),
+    };
+    saveRecord(records);
   };
 
   return {

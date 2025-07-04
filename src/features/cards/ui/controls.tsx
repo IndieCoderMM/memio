@@ -3,6 +3,7 @@
 import Button from "@/components/blocks/button";
 import ControlPanelLayout from "@/components/layouts/control-panel";
 import TimerClock, { TimerClockRef } from "@/components/widgets/timer-clock";
+import { saveRecord } from "@/features/core/utils/record-storage";
 import { cn } from "@/utils/tailwind";
 import { FlameIcon, SearchCheckIcon, ThumbsDownIcon } from "lucide-react";
 import { useRef } from "react";
@@ -18,6 +19,7 @@ import Status from "./status";
 
 const CardControls = () => {
   const mode = useCardStore((s) => s.mode);
+  const scanDuration = useCardStore((s) => s.scanDuration);
   const scanRef = useRef<TimerClockRef>(null);
   const recallRef = useRef<TimerClockRef>(null);
   const generated = useCardStore((s) => s.generated);
@@ -57,7 +59,8 @@ const CardControls = () => {
     }
 
     const errors = diffDecks(generated, tried);
-    if (Object.keys(errors).length > 0) {
+    const errorCount = Object.keys(errors).length;
+    if (errorCount > 0) {
       setErrors(errors);
       toast.error(`You made ${Object.keys(errors).length} mistakes!`);
     } else {
@@ -68,6 +71,17 @@ const CardControls = () => {
     setMode("check");
     const duration = recallRef.current?.getDuration() || 0;
     setRecallDuration(duration);
+
+    // Save record
+    const record: SessionRecord = {
+      type: "cards",
+      total: generated.length,
+      accuracy: (generated.length - errorCount) / generated.length,
+      scan_ms: scanDuration,
+      recall_ms: duration,
+      timestamp: Date.now(),
+    };
+    saveRecord(record);
   };
 
   const onReset = () => {

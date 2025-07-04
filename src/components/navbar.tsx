@@ -1,5 +1,5 @@
 "use client";
-import { BookOpen, Home, Menu, Settings, User, X } from "lucide-react";
+import { BookOpen, ChartLine, Home, Menu, User, X } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
@@ -7,7 +7,7 @@ import { useState } from "react";
 const navItems = [
   { href: "/", label: "Home", icon: <Home size={18} /> },
   { href: "/learn", label: "Learn", icon: <BookOpen size={18} /> },
-  { href: "/settings", label: "Settings", icon: <Settings size={18} /> },
+  { href: "/stats", label: "Statistics", icon: <ChartLine size={18} /> },
   { href: "/profile", label: "Profile", icon: <User size={18} /> },
 ];
 

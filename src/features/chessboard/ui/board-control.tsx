@@ -24,9 +24,9 @@ const BoardControl = () => {
   const { handleRecall, handleCheck } = useBoardControls();
 
   const onRecall = () => {
-    handleRecall();
     const duration = scanRef.current?.getDuration() || 0;
     setScanDuration(duration);
+    handleRecall();
   };
 
   const onCheck = () => {
@@ -34,9 +34,9 @@ const BoardControl = () => {
       toast.error("Please generate a board first.");
       return;
     }
-    handleCheck(key);
     const duration = recallRef.current?.getDuration() || 0;
     setRecallDuration(duration);
+    handleCheck(key, duration);
   };
 
   return (
