@@ -1,0 +1,62 @@
+[
+  {
+    "title": "Method of Loci",
+    "description": "Also known as the Memory Palace technique, this ancient method associates items with specific locations in an imaginary space.",
+    "tips": [
+      "Create a familiar route in your mind (your home, street, etc.)",
+      "Place items you want to remember along this route",
+      "Walk through the palace mentally to recall items",
+      "The more vivid and unusual the mental image, the better you remember"
+    ]
+  },
+  {
+    "title": "Chunking",
+    "description": "Break large pieces of information into smaller, more manageable chunks that are easier to remember.",
+    "tips": [
+      "Group related items together",
+      "Create meaningful patterns (phone numbers, dates)",
+      "Use familiar patterns like acronyms or mnemonics",
+      "Practice recognizing natural groupings"
+    ]
+  },
+  {
+    "title": "Visualization",
+    "description": "Create vivid mental images of what you want to remember. The more unusual and emotional, the better.",
+    "tips": [
+      "Make images exaggerated and colorful",
+      "Add action and movement to static images",
+      "Engage multiple senses in your visualization",
+      "Connect images in unusual, memorable ways"
+    ]
+  },
+  {
+    "title": "Spaced Repetition",
+    "description": "Review information at increasing intervals to strengthen memory formation and prevent forgetting.",
+    "tips": [
+      "Review after 1 day, then 3 days, then 1 week",
+      "Test yourself actively rather than passive reading",
+      "Gradually increase the time between reviews",
+      "Combine with other techniques for better results"
+    ]
+  },
+  {
+    "title": "Peg System",
+    "description": "Associate items you want to remember with pre-memorized \"pegs\" (like rhyming numbers or familiar objects).",
+    "tips": [
+      "Create your peg list before memorizing new items",
+      "Use rhymes, locations, or objects as pegs",
+      "Create vivid associations between items and pegs",
+      "Practice your peg system regularly"
+    ]
+  },
+  {
+    "title": "Story Method",
+    "description": "Create an imaginative story connecting the items you want to remember in sequential order.",
+    "tips": [
+      "Link items together in a narrative sequence",
+      "Make the story engaging and memorable",
+      "Add unusual or humorous elements",
+      "Retell the story mentally to reinforce memory"
+    ]
+  }
+]
