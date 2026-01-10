@@ -74,7 +74,7 @@ const AccuracyChart = () => {
           <YAxis domain={[0, 100]} tickFormatter={(v) => `${v}%`} />
           <Tooltip
             labelStyle={{ color: "black" }}
-            formatter={(value: number) => `${value.toFixed(1)}%`}
+            formatter={(value?: number) => `${value?.toFixed(1) ?? 0}%`}
           />
           <Line
             type="monotone"
