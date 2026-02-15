@@ -18,7 +18,7 @@ export default function Navbar() {
 
   return (
     <nav className="border-border bg-card sticky top-0 left-0 z-50 w-full border-b">
-      <div className="mx-auto max-w-7xl px-6 py-2">
+      <div className="w-full px-6 py-2">
         <div className="flex items-center justify-between">
           <Link href="/" className="flex items-center gap-2">
             <Image

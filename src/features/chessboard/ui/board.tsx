@@ -5,6 +5,7 @@ import { Chessboard } from "react-chessboard";
 import { CustomSquareStyles } from "react-chessboard/dist/chessboard/types";
 import { useChessStore } from "../hooks/use-chess-store";
 import { ChessSquare } from "../types";
+import { boardTheme } from "../utils/theme";
 
 const Board = () => {
   const board = useChessStore((state) => state.board);
@@ -57,6 +58,9 @@ const Board = () => {
 
         return true;
       }}
+      customLightSquareStyle={{ backgroundColor: boardTheme.lightSquareColor }}
+      customDarkSquareStyle={{ backgroundColor: boardTheme.darkSquareColor }}
+      customPieces={boardTheme.pieces}
     />
   );
 };
