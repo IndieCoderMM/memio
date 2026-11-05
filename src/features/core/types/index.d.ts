@@ -10,8 +10,10 @@ declare type ConfigType = {
   };
 };
 
+declare type SessionGame = "chessboard" | "number" | "binary" | "cards";
+
 declare type SessionRecord = {
-  type: "chessboard" | "number" | "binary" | "cards";
+  type: SessionGame;
   total: number;
   accuracy: number;
   scan_ms: number;

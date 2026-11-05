@@ -1,4 +1,5 @@
 import { Button } from "@/components/ui/button";
+import HomeProgress from "@/features/stats/ui/home-progress";
 import { cn } from "@/utils/tailwind";
 import { Binary, ChessPawn, LayoutGridIcon, Spade } from "lucide-react";
 import Link from "next/link";
@@ -107,44 +108,9 @@ export default function HomePage() {
         </div>
       </main>
       <footer className="text-muted mt-auto text-center text-sm">
-        {/* Stats Section */}
-        <section className="border-border mx-auto mt-8 max-w-7xl border-t px-6 py-12">
-          <div className="grid grid-cols-1 gap-6 md:grid-cols-3">
-            <div className="bg-card border-border border p-6 text-center">
-              <div className="text-primary mb-2 text-3xl font-bold">1,200+</div>
-              <p className="text-muted-foreground text-sm">Games Played</p>
-            </div>
-            <div className="bg-card border-border border p-6 text-center">
-              <div className="text-primary mb-2 text-3xl font-bold">2:45</div>
-              <p className="text-muted-foreground text-sm">Best Time</p>
-            </div>
-            <div className="bg-card border-border border p-6 text-center">
-              <div className="text-primary mb-2 text-3xl font-bold">87%</div>
-              <p className="text-muted-foreground text-sm">Accuracy</p>
-            </div>
-          </div>
-        </section>
+        <HomeProgress />
         &copy; {new Date().getFullYear()} Memio Labs. All rights reserved.
       </footer>
     </div>
   );
 }
-
-type GameCardProps = {
-  title: string;
-  icon: string;
-  href: string;
-};
-
-const GameCard = ({ title, icon, href }: GameCardProps) => {
-  return (
-    <Link href={href} className="group">
-      <div
-        className={`bg-surface rounded-2xl p-6 transition hover:scale-[1.02] hover:ring-2`}
-      >
-        <div className="mb-3 text-4xl">{icon}</div>
-        <h3 className="text-xl font-semibold">{title}</h3>
-      </div>
-    </Link>
-  );
-};

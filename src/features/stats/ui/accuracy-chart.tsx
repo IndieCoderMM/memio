@@ -1,7 +1,8 @@
 "use client";
+
 import { Button } from "@/components/ui/button";
-import { getSavedRecords } from "@/features/core/utils/record-storage";
-import { useEffect, useMemo, useState } from "react";
+import { games } from "@/features/stats/utils/stats";
+import { useMemo, useState } from "react";
 import {
   CartesianGrid,
   Line,
@@ -12,92 +13,70 @@ import {
   YAxis,
 } from "recharts";
 
-const types: SessionRecord["type"][] = [
-  "chessboard",
-  "number",
-  "binary",
-  "cards",
-] as const;
+type AccuracyChartProps = {
+  records: SessionRecord[];
+};
 
-const AccuracyChart = () => {
-  const [records, setRecords] = useState<Record<string, SessionRecord> | null>(
-    null,
+export default function AccuracyChart({ records }: AccuracyChartProps) {
+  const [selectedType, setSelectedType] = useState<SessionRecord["type"]>(
+    "chessboard",
   );
-  const [loadError, setLoadError] = useState(false);
-  const [selectedType, setSelectedType] = useState("chessboard");
 
-  useEffect(() => {
-    let cancelled = false;
-
-    getSavedRecords()
-      .then((savedRecords) => {
-        if (!cancelled) setRecords(savedRecords);
-      })
-      .catch(() => {
-        if (!cancelled) {
-          setRecords({});
-          setLoadError(true);
-        }
-      });
-
-    return () => {
-      cancelled = true;
-    };
-  }, []);
-
-  const chartData = useMemo(() => {
-    if (!records) return [];
-
-    return Object.values(records)
-      .filter((d) => d.type === selectedType)
-      .map((d) => ({
-        timestamp: new Date(d.timestamp).toLocaleTimeString(),
-        accuracy: d.accuracy * 100,
-      }));
-  }, [selectedType, records]);
+  const chartData = useMemo(
+    () =>
+      records
+        .filter((record) => record.type === selectedType)
+        .sort((left, right) => left.timestamp - right.timestamp)
+        .map((record) => ({
+          timestamp: new Date(record.timestamp).toLocaleDateString(),
+          accuracy: record.accuracy * 100,
+        })),
+    [records, selectedType],
+  );
 
   return (
     <div className="mx-auto w-full max-w-3xl">
-      <div className="mb-8 flex items-center justify-start gap-2">
-        <span className="mr-4">Games: </span>
-        {types.map((type) => (
+      <div className="mb-6 flex flex-wrap items-center gap-2">
+        <span className="text-muted-foreground mr-2 text-sm">Game:</span>
+        {games.map((game) => (
           <Button
             size="sm"
-            key={type}
-            onClick={() => setSelectedType(type)}
-            className={`rounded-md px-3 py-1 text-sm font-medium ${
-              selectedType === type ? "bg-primary text-white" : "bg-muted"
-            }`}
+            variant={selectedType === game.type ? "default" : "outline"}
+            key={game.type}
+            onClick={() => setSelectedType(game.type)}
+            aria-pressed={selectedType === game.type}
           >
-            {type}
+            {game.label}
           </Button>
         ))}
       </div>
-      {loadError ? (
-        <p role="alert" className="mb-4 text-sm text-destructive">
-          Saved sessions could not be loaded.
+      {chartData.length === 0 ? (
+        <p className="text-muted-foreground flex h-60 items-center justify-center text-sm">
+          No saved {games.find((game) => game.type === selectedType)?.label}{" "}
+          sessions to chart yet.
         </p>
-      ) : null}
-      <ResponsiveContainer width="100%" height={240}>
-        <LineChart data={chartData}>
-          <CartesianGrid strokeDasharray="3 3" />
-          <XAxis dataKey="timestamp" />
-          <YAxis domain={[0, 100]} tickFormatter={(v) => `${v}%`} />
-          <Tooltip
-            labelStyle={{ color: "black" }}
-            formatter={(value: number) => `${value.toFixed(1)}%`}
-          />
-          <Line
-            type="monotone"
-            dataKey="accuracy"
-            stroke="#34d399"
-            strokeWidth={3}
-            dot={{ r: 5 }}
-            activeDot={{ r: 8 }}
-          />
-        </LineChart>
-      </ResponsiveContainer>
+      ) : (
+        <ResponsiveContainer width="100%" height={240}>
+          <LineChart data={chartData}>
+            <CartesianGrid strokeDasharray="3 3" />
+            <XAxis dataKey="timestamp" />
+            <YAxis domain={[0, 100]} tickFormatter={(value) => `${value}%`} />
+            <Tooltip
+              labelStyle={{ color: "black" }}
+              formatter={(value: number) => `${value.toFixed(1)}%`}
+            />
+            <Line
+              type="monotone"
+              dataKey="accuracy"
+              name="Accuracy"
+              stroke="#34d399"
+              strokeWidth={3}
+              dot={{ r: 5 }}
+              activeDot={{ r: 8 }}
+            />
+          </LineChart>
+        </ResponsiveContainer>
+      )}
     </div>
   );
-};
-export default AccuracyChart;
+}
