@@ -31,11 +31,16 @@ export const useBoardControls = () => {
     configStorage.updateSetting("chessboard", { total: totalPieces });
   };
 
-  const handleRecall = () => {
+  const handleRecall = async () => {
     // If loadedKey exists, the board is already saved
     if (!loadedKey) {
-      // Save the current board to local storage and set key
-      const key = saveBoard(board);
+      let key: string;
+      try {
+        key = await saveBoard(board);
+      } catch {
+        toast.error("Your board could not be saved. Please try again.");
+        return;
+      }
       setBoardKey(key);
     }
 
@@ -46,7 +51,13 @@ export const useBoardControls = () => {
   };
 
   const handleCheck = async (key: string, recallDuration: number) => {
-    const recalledBoard = getBoard(key);
+    let recalledBoard;
+    try {
+      recalledBoard = await getBoard(key);
+    } catch {
+      toast.error("Your saved board could not be loaded.");
+      return;
+    }
     if (!recalledBoard) {
       toast.error("No board found with this key");
       return;

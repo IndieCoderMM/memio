@@ -30,14 +30,20 @@ const NumberControls = () => {
   const setActiveKey = useNumberStore((s) => s.setActiveKey);
   const reset = useNumberStore((s) => s.reset);
 
-  const onRecall = () => {
+  const onRecall = async () => {
     if (!generated) {
       toast.info("Please generate numbers first");
       return;
     }
 
     if (!activeKey) {
-      const key = saveNum(generated.join(""));
+      let key: string;
+      try {
+        key = await saveNum(generated.join(""));
+      } catch {
+        toast.error("Your numbers could not be saved. Please try again.");
+        return;
+      }
       setActiveKey(key);
     }
 

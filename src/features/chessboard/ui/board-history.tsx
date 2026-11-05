@@ -1,50 +1,41 @@
 "use client";
 
 import HistoryList from "@/components/blocks/history-list";
-import Logger from "@/utils/logger";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
+import { toast } from "react-toastify";
 import { useChessStore } from "../hooks/use-chess-store";
 import { ChessBoard } from "../types";
-import { getSavedBoards, replaceBoards } from "../utils/storage";
+import { deleteBoard, getSavedBoards } from "../utils/storage";
 
 const BoardHistory = () => {
-  const [boards, setBoards] = useState<Record<string, ChessBoard> | null>(null);
-  const [refreshing, setRefreshing] = useState(false);
+  const [boards, setBoards] = useState<Record<string, ChessBoard>>({});
+  const [refreshing, setRefreshing] = useState(true);
   const activeKey = useChessStore((state) => state.boardKey);
-
   const setActivePiece = useChessStore((state) => state.setActivePiece);
   const setBoard = useChessStore((state) => state.setBoard);
   const setMode = useChessStore((state) => state.setMode);
   const setBoardKey = useChessStore((state) => state.setBoardKey);
   const setErrorSquares = useChessStore((state) => state.setErrorSquares);
 
-  useEffect(() => {
-    const initialBoards = getSavedBoards();
-    if (initialBoards) {
-      setBoards(initialBoards);
-    } else {
-      Logger.info("BoardHistory", "No saved boards found.");
+  const refreshBoards = useCallback(async () => {
+    setRefreshing(true);
+    try {
+      setBoards(await getSavedBoards());
+    } catch {
+      toast.error("Saved chessboard history could not be loaded.");
+    } finally {
+      setRefreshing(false);
     }
   }, []);
 
-  const refreshBoards = () => {
-    const updatedBoards = getSavedBoards();
-    setBoards(updatedBoards);
-  };
+  useEffect(() => {
+    void refreshBoards();
+  }, [refreshBoards]);
 
   const handleLoad = (key: string) => {
-    if (!boards) {
-      Logger.error("BoardHistory", "No boards available to load.");
-      return;
-    }
-
     const recalledBoard = boards[key];
-    if (!recalledBoard) {
-      Logger.error("BoardHistory", `No board found for key: ${key}`);
-      return;
-    }
+    if (!recalledBoard) return;
 
-    // Set the board state
     setBoard(recalledBoard);
     setMode("view");
     setActivePiece(null);
@@ -52,19 +43,16 @@ const BoardHistory = () => {
     setBoardKey(key);
   };
 
-  const handleDelete = (key: string) => {
-    const newBoards = { ...boards };
-    delete newBoards[key];
-
-    replaceBoards(newBoards);
-    refreshBoards();
+  const handleDelete = async (key: string) => {
+    try {
+      await deleteBoard(key);
+      setBoards(await getSavedBoards());
+    } catch {
+      toast.error("Saved chessboard could not be deleted.");
+    }
   };
 
-  const keys = boards ? Object.keys(boards) : [];
-
-  keys.sort((a, b) => {
-    return Number(b) - Number(a); // Sort in descending order
-  });
+  const keys = Object.keys(boards).sort((a, b) => Number(b) - Number(a));
 
   return (
     <HistoryList
@@ -72,13 +60,7 @@ const BoardHistory = () => {
       items={keys.map((k) => ({ id: k, isActive: k === activeKey }))}
       onLoad={handleLoad}
       onDelete={handleDelete}
-      onRefresh={() => {
-        setRefreshing(true);
-        refreshBoards();
-        setTimeout(() => {
-          setRefreshing(false);
-        }, 1000); // Simulate a short loading time
-      }}
+      onRefresh={() => void refreshBoards()}
       refreshing={refreshing}
     />
   );

@@ -1,28 +1,23 @@
-import { Storage } from "@/utils/Storage";
+import {
+  COLLECTION_STORES,
+  deleteItem,
+  getAllItems,
+  getItem,
+  putItem,
+} from "@/features/core/utils/indexed-db";
 import { Deck } from "../types";
 
-const DECK_STORAGE = "savedDecks";
-
-const deckStorage = new Storage<Deck>(DECK_STORAGE);
-
-export const saveDeck = (deck: Deck) => {
-  const key = deckStorage.saveWithTimestamp(deck);
-
+export const saveDeck = async (deck: Deck): Promise<string> => {
+  const key = Date.now().toString();
+  await putItem(COLLECTION_STORES.cards, key, deck);
   return key;
 };
 
-export const getSavedDecks = (): Record<string, Deck> | null => {
-  const decks = deckStorage.getAll();
+export const getSavedDecks = (): Promise<Record<string, Deck>> =>
+  getAllItems<Deck>(COLLECTION_STORES.cards);
 
-  return decks;
-};
+export const getDeck = (key: string): Promise<Deck | null> =>
+  getItem<Deck>(COLLECTION_STORES.cards, key);
 
-export const getDeck = (key: string): Deck | null => {
-  const deck = deckStorage.getItem(key);
-
-  return deck;
-};
-
-export const replaceDecks = (decks: Record<string, Deck>) => {
-  deckStorage.replaceAll(decks);
-};
+export const deleteDeck = (key: string): Promise<void> =>
+  deleteItem(COLLECTION_STORES.cards, key);

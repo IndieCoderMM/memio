@@ -32,14 +32,20 @@ const CardControls = () => {
   const setErrors = useCardStore((s) => s.setErrors);
   const reset = useCardStore((s) => s.reset);
 
-  const onRecall = () => {
+  const onRecall = async () => {
     if (!generated) {
       toast.info("Please shuffle cards first");
       return;
     }
 
     if (!activeKey) {
-      const key = saveDeck(generated);
+      let key: string;
+      try {
+        key = await saveDeck(generated);
+      } catch {
+        toast.error("Your deck could not be saved. Please try again.");
+        return;
+      }
       setActiveKey(key);
     }
 

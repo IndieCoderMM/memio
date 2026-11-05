@@ -1,27 +1,22 @@
-import { Storage } from "@/utils/Storage";
+import {
+  COLLECTION_STORES,
+  deleteItem,
+  getAllItems,
+  getItem,
+  putItem,
+} from "@/features/core/utils/indexed-db";
 
-const BIN_STORAGE = "savedBinarys";
-
-const binStorage = new Storage<string>(BIN_STORAGE);
-
-export const saveBinary = (num: string) => {
-  const key = binStorage.saveWithTimestamp(num);
-
+export const saveBinary = async (num: string): Promise<string> => {
+  const key = Date.now().toString();
+  await putItem(COLLECTION_STORES.binary, key, num);
   return key;
 };
 
-export const getSavedBins = (): Record<string, string> | null => {
-  const nums = binStorage.getAll();
+export const getSavedBins = (): Promise<Record<string, string>> =>
+  getAllItems<string>(COLLECTION_STORES.binary);
 
-  return nums;
-};
+export const getBinary = (key: string): Promise<string | null> =>
+  getItem<string>(COLLECTION_STORES.binary, key);
 
-export const getBinary = (key: string): string | null => {
-  const num = binStorage.getItem(key);
-
-  return num;
-};
-
-export const replaceBins = (nums: Record<string, string>) => {
-  binStorage.replaceAll(nums);
-};
+export const deleteBinary = (key: string): Promise<void> =>
+  deleteItem(COLLECTION_STORES.binary, key);

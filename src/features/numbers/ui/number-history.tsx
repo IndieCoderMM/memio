@@ -1,59 +1,49 @@
 import HistoryList from "@/components/blocks/history-list";
-import Logger from "@/utils/logger";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
+import { toast } from "react-toastify";
 import { useNumberStore } from "../hooks/use-number-store";
-import { getSavedNums, replaceNums } from "../utils/storage";
+import { deleteNum, getSavedNums } from "../utils/storage";
 
 const NumberHistory = () => {
-  const [nums, setNums] = useState<Record<string, string> | null>(null);
-  const [refreshing, setRefreshing] = useState(false);
+  const [nums, setNums] = useState<Record<string, string>>({});
+  const [refreshing, setRefreshing] = useState(true);
   const activeKey = useNumberStore((s) => s.activeKey);
   const setGenerated = useNumberStore((s) => s.setGeneratedNumbers);
   const setActiveKey = useNumberStore((s) => s.setActiveKey);
 
-  useEffect(() => {
-    const savedNums = getSavedNums();
-    if (savedNums) {
-      setNums(savedNums);
-    } else {
-      Logger.info("NumberHistory", "No saved nums found.");
+  const refreshNums = useCallback(async () => {
+    setRefreshing(true);
+    try {
+      setNums(await getSavedNums());
+    } catch {
+      toast.error("Saved number history could not be loaded.");
+    } finally {
+      setRefreshing(false);
     }
   }, []);
 
-  const refreshNums = () => {
-    const nums = getSavedNums();
-    setNums(nums);
-  };
+  useEffect(() => {
+    void refreshNums();
+  }, [refreshNums]);
 
   const handleLoad = (key: string) => {
-    if (!nums) {
-      Logger.info("NumberHistory", "No nums available to load.");
-      return;
-    }
-
     const loadedNum = nums[key];
-    if (!loadedNum) {
-      Logger.info("NumberHistory", `No num found for key: ${key}`);
-      return;
-    }
+    if (!loadedNum) return;
 
     setGenerated(loadedNum.split(""));
     setActiveKey(key);
   };
 
-  const handleDelete = (key: string) => {
-    const newNums = { ...nums };
-    delete newNums[key];
-
-    replaceNums(newNums);
-    refreshNums();
+  const handleDelete = async (key: string) => {
+    try {
+      await deleteNum(key);
+      setNums(await getSavedNums());
+    } catch {
+      toast.error("Saved number could not be deleted.");
+    }
   };
 
-  const keys = nums ? Object.keys(nums) : [];
-
-  keys.sort((a, b) => {
-    return Number(b) - Number(a); // Sort in descending order
-  });
+  const keys = Object.keys(nums).sort((a, b) => Number(b) - Number(a));
 
   return (
     <HistoryList
@@ -61,11 +51,7 @@ const NumberHistory = () => {
       items={keys.map((k) => ({ id: k, isActive: k === activeKey }))}
       onLoad={handleLoad}
       onDelete={handleDelete}
-      onRefresh={() => {
-        setRefreshing(true);
-        refreshNums();
-        setTimeout(() => setRefreshing(false), 1000);
-      }}
+      onRefresh={() => void refreshNums()}
       refreshing={refreshing}
     />
   );
