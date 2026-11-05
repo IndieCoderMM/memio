@@ -23,15 +23,26 @@ const AccuracyChart = () => {
   const [records, setRecords] = useState<Record<string, SessionRecord> | null>(
     null,
   );
+  const [loadError, setLoadError] = useState(false);
   const [selectedType, setSelectedType] = useState("chessboard");
 
   useEffect(() => {
-    const fetchRecords = () => {
-      const savedRecords = getSavedRecords();
-      setRecords(savedRecords);
-    };
+    let cancelled = false;
 
-    fetchRecords();
+    getSavedRecords()
+      .then((savedRecords) => {
+        if (!cancelled) setRecords(savedRecords);
+      })
+      .catch(() => {
+        if (!cancelled) {
+          setRecords({});
+          setLoadError(true);
+        }
+      });
+
+    return () => {
+      cancelled = true;
+    };
   }, []);
 
   const chartData = useMemo(() => {
@@ -62,6 +73,11 @@ const AccuracyChart = () => {
           </Button>
         ))}
       </div>
+      {loadError ? (
+        <p role="alert" className="mb-4 text-sm text-destructive">
+          Saved sessions could not be loaded.
+        </p>
+      ) : null}
       <ResponsiveContainer width="100%" height={240}>
         <LineChart data={chartData}>
           <CartesianGrid strokeDasharray="3 3" />

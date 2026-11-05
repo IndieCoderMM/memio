@@ -46,7 +46,7 @@ const NumberControls = () => {
     setScanDuration(duration);
   };
 
-  const onCheck = () => {
+  const onCheck = async () => {
     if (!generated || !tried) {
       toast.error(
         generated
@@ -79,7 +79,11 @@ const NumberControls = () => {
       recall_ms: duration,
       timestamp: Date.now(),
     };
-    saveRecord(record);
+    try {
+      await saveRecord(record);
+    } catch {
+      toast.error("Your result could not be saved.");
+    }
   };
 
   const onReset = () => {

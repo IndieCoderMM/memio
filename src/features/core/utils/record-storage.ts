@@ -1,17 +1,14 @@
-import { Storage } from "@/utils/Storage";
+import {
+  COLLECTION_STORES,
+  getAllItems,
+  putItem,
+} from "@/features/core/utils/indexed-db";
 
-const RECORD_STORAGE = "savedRecords";
-
-const recordStorage = new Storage<SessionRecord>(RECORD_STORAGE);
-
-export const saveRecord = (record: SessionRecord) => {
-  const key = recordStorage.saveWithTimestamp(record);
-
+export const saveRecord = async (record: SessionRecord): Promise<string> => {
+  const key = Date.now().toString();
+  await putItem(COLLECTION_STORES.sessions, key, record);
   return key;
 };
 
-export const getSavedRecords = (): Record<string, SessionRecord> | null => {
-  const records = recordStorage.getAll();
-
-  return records;
-};
+export const getSavedRecords = (): Promise<Record<string, SessionRecord>> =>
+  getAllItems<SessionRecord>(COLLECTION_STORES.sessions);

@@ -45,7 +45,7 @@ export const useBoardControls = () => {
     setActivePiece(null);
   };
 
-  const handleCheck = (key: string, recallDuration: number) => {
+  const handleCheck = async (key: string, recallDuration: number) => {
     const recalledBoard = getBoard(key);
     if (!recalledBoard) {
       toast.error("No board found with this key");
@@ -77,7 +77,11 @@ export const useBoardControls = () => {
       recall_ms: recallDuration,
       timestamp: Date.now(),
     };
-    saveRecord(records);
+    try {
+      await saveRecord(records);
+    } catch {
+      toast.error("Your result could not be saved.");
+    }
   };
 
   return {
