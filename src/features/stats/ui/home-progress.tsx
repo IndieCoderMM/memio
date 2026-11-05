@@ -1,12 +1,9 @@
 "use client";
 
-import { Button } from "@/components/ui/button";
-import {
-  Card,
-  CardContent,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
+import { buttonClasses } from "@/components/pouf/Button";
+import { Grid, Row, Stack } from "@/components/pouf/layout";
+import { Card } from "@/components/pouf/surface";
+import { Eyebrow, Heading, Text } from "@/components/pouf/text";
 import { useSessionRecords } from "@/features/stats/hooks/use-session-records";
 import {
   calculateSessionStats,
@@ -20,58 +17,64 @@ export default function HomeProgress() {
   const stats = useMemo(() => calculateSessionStats(records), [records]);
 
   return (
-    <section className="border-border mx-auto mt-8 max-w-7xl border-t px-6 py-12">
-      <div className="mb-6">
-        <h2 className="text-foreground text-2xl font-bold">Your Progress</h2>
-        <p className="text-muted-foreground mt-2">
-          Summaries from your saved practice sessions.
-        </p>
-      </div>
+    <section aria-label="Your progress">
+      <Stack gap={4}>
+        <Stack gap={1}>
+          <Eyebrow>Your progress</Eyebrow>
+          <Heading level={2}>Practice, tracked</Heading>
+          <Text muted>Summaries from your saved practice sessions.</Text>
+        </Stack>
 
-      {isLoading ? (
-        <p className="text-muted-foreground" role="status">
-          Loading saved progress…
-        </p>
-      ) : error ? (
-        <p className="text-destructive" role="alert">
-          {error}
-        </p>
-      ) : records.length === 0 ? (
-        <div className="bg-card border-border flex flex-col items-start gap-4 border p-6 md:flex-row md:items-center md:justify-between">
-          <div>
-            <h3 className="text-foreground font-semibold">
-              Your progress starts with a practice session
-            </h3>
-            <p className="text-muted-foreground mt-1 text-sm">
-              Finish a game to see your session count, fastest recall, and accuracy here.
-            </p>
+        {isLoading ? (
+          <Text muted>Loading saved progress…</Text>
+        ) : error ? (
+          <div role="alert">
+            <Text>{error}</Text>
           </div>
-          <Button asChild>
-            <Link href="/numbers">Play Numbers</Link>
-          </Button>
-        </div>
-      ) : (
-        <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
-          <ProgressCard title="Total Sessions" value={stats.totalSessions.toLocaleString()} />
-          <ProgressCard
-            title="Fastest Recall"
-            value={
-              stats.fastestRecall
-                ? formatRecallTime(stats.fastestRecall.recallMs)
-                : "—"
-            }
-            detail={stats.fastestRecall?.label}
-          />
-          <ProgressCard
-            title="Item-weighted Accuracy"
-            value={
-              stats.weightedAccuracy === null
-                ? "—"
-                : `${Math.round(stats.weightedAccuracy * 100)}%`
-            }
-          />
-        </div>
-      )}
+        ) : records.length === 0 ? (
+          <Card>
+            <Row justify="between" align="top">
+              <Stack gap={1}>
+                <Heading level={3}>Your first session starts here</Heading>
+                <Text muted>
+                  Finish a game to see your session count, fastest recall, and
+                  accuracy.
+                </Text>
+              </Stack>
+              <Link
+                href="/numbers"
+                className={`${buttonClasses({ size: "sm" })} no-underline`}
+              >
+                Play Numbers
+              </Link>
+            </Row>
+          </Card>
+        ) : (
+          <Grid cols={3} gap={4}>
+            <ProgressCard
+              title="Total sessions"
+              value={stats.totalSessions.toLocaleString()}
+            />
+            <ProgressCard
+              title="Fastest recall"
+              value={
+                stats.fastestRecall
+                  ? formatRecallTime(stats.fastestRecall.recallMs)
+                  : "—"
+              }
+              detail={stats.fastestRecall?.label}
+            />
+            <ProgressCard
+              title="Item-weighted accuracy"
+              value={
+                stats.weightedAccuracy === null
+                  ? "—"
+                  : `${Math.round(stats.weightedAccuracy * 100)}%`
+              }
+            />
+          </Grid>
+        )}
+      </Stack>
     </section>
   );
 }
@@ -86,18 +89,14 @@ function ProgressCard({
   detail?: string;
 }) {
   return (
-    <Card className="border-border bg-card">
-      <CardHeader className="pb-3">
-        <CardTitle className="text-muted-foreground text-sm font-medium">
+    <Card variant="tight">
+      <Stack gap={1}>
+        <Text size="sm" muted>
           {title}
-        </CardTitle>
-      </CardHeader>
-      <CardContent>
-        <div className="text-foreground text-3xl font-bold">{value}</div>
-        {detail ? (
-          <p className="text-muted-foreground mt-1 text-xs">{detail}</p>
-        ) : null}
-      </CardContent>
+        </Text>
+        <Heading level={2}>{value}</Heading>
+        {detail && <Text size="sm" muted>{detail}</Text>}
+      </Stack>
     </Card>
   );
 }

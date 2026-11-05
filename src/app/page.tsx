@@ -1,116 +1,162 @@
-import { Button } from "@/components/ui/button";
+import { buttonClasses } from "@/components/pouf/Button";
+import { Footer } from "@/components/pouf/footer";
+import { Grid, Row, Stack } from "@/components/pouf/layout";
+import { Badge, Blob } from "@/components/pouf/media";
+import { Card } from "@/components/pouf/surface";
+import { Eyebrow, Heading, Highlight, Text } from "@/components/pouf/text";
 import HomeProgress from "@/features/stats/ui/home-progress";
-import { cn } from "@/utils/tailwind";
 import { Binary, ChessPawn, LayoutGridIcon, Spade } from "lucide-react";
 import Link from "next/link";
-
-const ICON_SIZE = 48;
 
 const games = [
   {
     id: "numbers",
     name: "Numbers",
     href: "/numbers",
-    icon: (
-      <LayoutGridIcon size={ICON_SIZE} className="stroke-1 text-violet-800" />
-    ),
-    description: "Memorize long sequences of random numbers",
-    difficulty: "Beginner",
-    color: "from-blue-500/20 to-violet-600/20",
+    icon: <LayoutGridIcon size={32} strokeWidth={1.9} />,
+    description: "Memorize sequences of random numbers.",
+    difficulty: "newbie",
+    tone: "mint",
+    iconTone: "blue",
   },
   {
     id: "binary",
     name: "Binary",
     href: "/binary",
-    icon: <Binary size={ICON_SIZE} className="stroke-1 text-orange-700" />,
-    description: "Master binary sequences and patterns",
-    difficulty: "Intermediate",
-    color: "from-purple-500/20 to-red-600/20",
+    icon: <Binary size={32} strokeWidth={1.9} />,
+    description: "Practice recalling binary sequences and patterns.",
+    difficulty: "newbie",
+    tone: "yellow",
+    iconTone: "purple",
   },
   {
     id: "chessboard",
     name: "Chessboard",
     href: "/chessboard",
-    icon: <ChessPawn size={ICON_SIZE} className="stroke-1 text-blue-800" />,
-    description: "Remember the positions of chess pieces on the board",
-    difficulty: "Advanced",
-    color: "from-blue-400/20 to-orange-600/20",
+    icon: <ChessPawn size={32} strokeWidth={1.9} />,
+    description: "Remember where chess pieces sit on the board.",
+    difficulty: "pro",
+    tone: "pink",
+    iconTone: "mint",
   },
   {
     id: "cards",
     name: "Cards",
     href: "/cards",
-    icon: <Spade size={ICON_SIZE} className="text-accent-red stroke-1" />,
-    description: "Find matching pairs in a card grid",
-    difficulty: "Advanced",
-    color: "from-green-400/20 to-red-700/20",
+    icon: <Spade size={32} strokeWidth={1.9} />,
+    description: "Find matching pairs in a card grid.",
+    difficulty: "pro",
+    tone: "orange",
+    iconTone: "yellow",
   },
-];
+] as const;
+
+const sampleSequence = [
+  { digit: "7", tone: "purple" },
+  { digit: "2", tone: "yellow" },
+  { digit: "9", tone: "mint" },
+  { digit: "4", tone: "pink" },
+] as const;
 
 export default function HomePage() {
   return (
-    <div className="bg-background min-h-screen">
-      <main className="mx-auto max-w-7xl px-6 py-12">
-        <div className="mb-16 text-center">
-          <h1 className="text-foreground mb-4 text-4xl font-bold md:text-5xl">
-            Train Your Brain
-          </h1>
-          <p className="text-muted-foreground mx-auto mb-8 max-w-2xl text-lg">
-            Master photographic memory through engaging mini games. Challenge
-            yourself and track your progress.
-          </p>
-          <Link href="/wiki">
-            <Button className="bg-primary hover:bg-primary/90">
-              Learn Memory Techniques
-            </Button>
-          </Link>
-        </div>
-
-        {/* Games Grid */}
-        <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-4">
-          {games.map((game) => (
-            <div
-              key={game.id}
-              className="group bg-card border-border hover:border-primary/50 relative flex flex-col border p-6 transition-all"
-            >
-              {/* Background gradient effect */}
-              <div
-                className={cn(
-                  `absolute inset-0 bg-linear-to-br ${game.color} opacity-0 transition-opacity group-hover:opacity-100`,
-                )}
-              ></div>
-
-              <div className="relative z-10">
-                <div className="mb-3 text-4xl">{game.icon}</div>
-                <h3 className="text-foreground mb-2 text-lg font-bold">
-                  {game.name}
-                </h3>
-                <p className="text-muted-foreground mb-4 text-sm">
-                  {game.description}
-                </p>
-              </div>
-
-              <div className="relative mt-auto flex items-center justify-between">
-                <span className="text-primary text-xs font-semibold uppercase">
-                  {game.difficulty}
-                </span>
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  className="text-primary hover:bg-primary hover:text-primary-foreground"
-                  asChild
+    <main className="mx-auto max-w-[1120px] px-(--s5) pb-(--s8) max-[620px]:px-(--s3)">
+      <Stack gap={10}>
+        <section aria-label="Introduction" className="py-(--s8)">
+          <Grid cols="sidebar" gap={6}>
+            <Stack gap={4}>
+              <Eyebrow>Memory practice, made playful</Eyebrow>
+              <Heading level={1}>
+                Train your <Highlight>memory</Highlight> one round at a time.
+              </Heading>
+              <Text muted>
+                Choose a small challenge, focus for a few minutes, and build a
+                practice habit that fits your day.
+              </Text>
+              <Row gap={3}>
+                <Link
+                  href="/numbers"
+                  className={`${buttonClasses({ size: "lg" })} no-underline`}
                 >
-                  <Link href={game.href}>Play →</Link>
-                </Button>
-              </div>
-            </div>
-          ))}
-        </div>
-      </main>
-      <footer className="text-muted mt-auto text-center text-sm">
+                  Start with Numbers
+                </Link>
+                <Link
+                  href="/wiki"
+                  className={`${buttonClasses({ size: "lg", variant: "quiet" })} no-underline`}
+                >
+                  Learn memory techniques
+                </Link>
+              </Row>
+            </Stack>
+          </Grid>
+        </section>
+
+        <section aria-label="Memory games" id="games">
+          <Stack gap={4}>
+            <Stack gap={1}>
+              <Eyebrow>Choose a practice</Eyebrow>
+              <Heading level={2}>Find your next challenge</Heading>
+            </Stack>
+
+            <Grid cols={4} gap={2}>
+              {games.map((game) => (
+                <Link
+                  key={game.id}
+                  href={game.href}
+                  className="rounded-card text-ink focus-visible:outline-purple block no-underline focus-visible:outline-2 focus-visible:outline-offset-4"
+                >
+                  <Card motion="lift">
+                    <Stack gap={4}>
+                      <Row justify="between" align="top">
+                        <Blob icon={game.icon} tone={game.iconTone} />
+                        <Badge tone={game.tone}>{game.difficulty}</Badge>
+                      </Row>
+                      <Stack gap={1}>
+                        <Heading level={3}>{game.name}</Heading>
+                        <Text muted>{game.description}</Text>
+                      </Stack>
+                      <span className="inline-flex min-h-[40px] items-center gap-(--s2) self-start font-black">
+                        Play {game.name}
+                        <span aria-hidden="true">→</span>
+                      </span>
+                    </Stack>
+                  </Card>
+                </Link>
+              ))}
+            </Grid>
+          </Stack>
+        </section>
+
         <HomeProgress />
-        &copy; {new Date().getFullYear()} Memio Labs. All rights reserved.
-      </footer>
-    </div>
+
+        <Footer
+          brand={
+            <Link href="/" className="text-ink no-underline">
+              Memio
+            </Link>
+          }
+          tagline="Memory practice for curious minds."
+          columns={[
+            {
+              title: "Practice",
+              links: [
+                { label: "Numbers", href: "/numbers" },
+                { label: "Binary", href: "/binary" },
+                { label: "Chessboard", href: "/chessboard" },
+                { label: "Cards", href: "/cards" },
+              ],
+            },
+            {
+              title: "Explore",
+              links: [
+                { label: "Memory wiki", href: "/wiki" },
+                { label: "Your stats", href: "/stats" },
+              ],
+            },
+          ]}
+          note={`© ${new Date().getFullYear()} Memio Labs`}
+        />
+      </Stack>
+    </main>
   );
 }
