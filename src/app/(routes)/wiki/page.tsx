@@ -1,4 +1,3 @@
-import DevBanner from "@/components/blocks/dev-banner";
 import {
   Card,
   CardContent,
@@ -11,8 +10,6 @@ import techniques from "@/data/wiki.json";
 export default function Wiki() {
   return (
     <div className="bg-background relative min-h-screen">
-      <DevBanner />
-
       <div className="mx-auto max-w-7xl px-6 py-12">
         {/* Header */}
         <div className="mb-12">

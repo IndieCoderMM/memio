@@ -22,6 +22,7 @@ const NumberControls = () => {
   const tried = useNumberStore((s) => s.tried);
   const scanRef = useRef<TimerClockRef>(null);
   const recallRef = useRef<TimerClockRef>(null);
+  const recallInFlightRef = useRef(false);
   const scanDuration = useNumberStore((s) => s.scanDuration);
   const setMode = useNumberStore((s) => s.setMode);
   const setErrorSquares = useNumberStore((s) => s.setErrorSquares);
@@ -31,25 +32,31 @@ const NumberControls = () => {
   const reset = useNumberStore((s) => s.reset);
 
   const onRecall = async () => {
+    if (recallInFlightRef.current) return;
     if (!generated) {
       toast.info("Please generate numbers first");
       return;
     }
 
-    if (!activeKey) {
-      let key: string;
-      try {
-        key = await saveNum(generated.join(""));
-      } catch {
-        toast.error("Your numbers could not be saved. Please try again.");
-        return;
+    recallInFlightRef.current = true;
+    try {
+      if (!activeKey) {
+        let key: string;
+        try {
+          key = await saveNum(generated.join(""));
+        } catch {
+          toast.error("Your numbers could not be saved. Please try again.");
+          return;
+        }
+        setActiveKey(key);
       }
-      setActiveKey(key);
-    }
 
-    setMode("edit");
-    const duration = scanRef.current?.getDuration() || 0;
-    setScanDuration(duration);
+      setMode("edit");
+      const duration = scanRef.current?.getDuration() || 0;
+      setScanDuration(duration);
+    } finally {
+      recallInFlightRef.current = false;
+    }
   };
 
   const onCheck = async () => {

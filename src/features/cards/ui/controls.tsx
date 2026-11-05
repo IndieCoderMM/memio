@@ -22,6 +22,7 @@ const CardControls = () => {
   const scanDuration = useCardStore((s) => s.scanDuration);
   const scanRef = useRef<TimerClockRef>(null);
   const recallRef = useRef<TimerClockRef>(null);
+  const recallInFlightRef = useRef(false);
   const generated = useCardStore((s) => s.generated);
   const tried = useCardStore((s) => s.tried);
   const activeKey = useCardStore((s) => s.activeKey);
@@ -33,25 +34,31 @@ const CardControls = () => {
   const reset = useCardStore((s) => s.reset);
 
   const onRecall = async () => {
+    if (recallInFlightRef.current) return;
     if (!generated) {
       toast.info("Please shuffle cards first");
       return;
     }
 
-    if (!activeKey) {
-      let key: string;
-      try {
-        key = await saveDeck(generated);
-      } catch {
-        toast.error("Your deck could not be saved. Please try again.");
-        return;
+    recallInFlightRef.current = true;
+    try {
+      if (!activeKey) {
+        let key: string;
+        try {
+          key = await saveDeck(generated);
+        } catch {
+          toast.error("Your deck could not be saved. Please try again.");
+          return;
+        }
+        setActiveKey(key);
       }
-      setActiveKey(key);
-    }
 
-    setMode("edit");
-    const duration = scanRef.current?.getDuration() || 0;
-    setScanDuration(duration);
+      setMode("edit");
+      const duration = scanRef.current?.getDuration() || 0;
+      setScanDuration(duration);
+    } finally {
+      recallInFlightRef.current = false;
+    }
   };
 
   const onCheck = async () => {

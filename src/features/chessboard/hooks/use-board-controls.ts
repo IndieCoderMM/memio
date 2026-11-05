@@ -1,3 +1,4 @@
+import { useRef } from "react";
 import { configStorage } from "@/features/core/utils/config-storage";
 import { saveRecord } from "@/features/core/utils/record-storage";
 import { toast } from "react-toastify";
@@ -7,6 +8,7 @@ import { getBoard, saveBoard } from "../utils/storage";
 import { useChessStore } from "./use-chess-store";
 
 export const useBoardControls = () => {
+  const recallInFlightRef = useRef(false);
   const board = useChessStore((state) => state.board);
   const loadedKey = useChessStore((state) => state.boardKey);
   const mode = useChessStore((state) => state.mode);
@@ -32,22 +34,27 @@ export const useBoardControls = () => {
   };
 
   const handleRecall = async () => {
-    // If loadedKey exists, the board is already saved
-    if (!loadedKey) {
-      let key: string;
-      try {
-        key = await saveBoard(board);
-      } catch {
-        toast.error("Your board could not be saved. Please try again.");
-        return;
-      }
-      setBoardKey(key);
-    }
+    if (recallInFlightRef.current) return;
+    recallInFlightRef.current = true;
 
-    // Reset the board and mode
-    setBoard({});
-    setMode("edit");
-    setActivePiece(null);
+    try {
+      if (!loadedKey) {
+        let key: string;
+        try {
+          key = await saveBoard(board);
+        } catch {
+          toast.error("Your board could not be saved. Please try again.");
+          return;
+        }
+        setBoardKey(key);
+      }
+
+      setBoard({});
+      setMode("edit");
+      setActivePiece(null);
+    } finally {
+      recallInFlightRef.current = false;
+    }
   };
 
   const handleCheck = async (key: string, recallDuration: number) => {

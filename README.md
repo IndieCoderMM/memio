@@ -1,10 +1,18 @@
-# Memio - Memory Training App
+# Memio
 
-Memio is a memory training application designed to help users improve their memory skills through various exercises and techniques. The app provides a user-friendly interface and a range of features to enhance the learning experience.
+Memio is a local memory training app with four games: Numbers, Binary, Cards,
+and Chessboard.
 
-## Todos
+## Progress and preferences
 
-- [x] Number memory
-- [x] Add notification
-- [ ] Add binary
-- [ ] Add cards
+Completed sessions and saved game histories stay in IndexedDB in your browser.
+Your display name, dark mode, and game-size settings are saved in localStorage.
+Memio works without an account or cloud sync.
+
+## Pages
+
+- Home summarizes progress from saved sessions.
+- Stats shows session history, game summaries, weekly activity, and earned
+  achievements.
+- Profile lets you edit your display name and dark mode.
+- Wiki contains memory techniques and practice tips.

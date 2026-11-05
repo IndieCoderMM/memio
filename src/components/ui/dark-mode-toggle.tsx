@@ -3,16 +3,20 @@
 import { useAppStore } from "@/lib/app-store";
 
 export default function DarkModeToggle() {
-  const { isDarkMode, toggleDarkMode } = useAppStore();
+  const isDarkMode = useAppStore((state) => state.isDarkMode);
+  const toggleDarkMode = useAppStore((state) => state.toggleDarkMode);
 
   return (
     <div className="bg-muted/50 border-border flex items-center justify-between rounded border p-4">
       <div>
         <p className="text-foreground font-semibold">Dark Mode</p>
-        <p className="text-muted-foreground text-sm">Always use dark theme</p>
+        <p className="text-muted-foreground text-sm">
+          Use a dark color theme.
+        </p>
       </div>
       <label className="relative inline-flex cursor-pointer items-center">
         <input
+          aria-label="Dark mode"
           type="checkbox"
           checked={isDarkMode}
           onChange={toggleDarkMode}

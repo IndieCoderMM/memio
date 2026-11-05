@@ -2,7 +2,9 @@ import { create } from "zustand";
 import { persist } from "zustand/middleware";
 
 interface AppState {
+  displayName: string;
   isDarkMode: boolean;
+  setDisplayName: (value: string) => void;
   toggleDarkMode: () => void;
   setDarkMode: (value: boolean) => void;
 }
@@ -10,7 +12,9 @@ interface AppState {
 export const useAppStore = create<AppState>()(
   persist(
     (set) => ({
+      displayName: "",
       isDarkMode: true,
+      setDisplayName: (value: string) => set({ displayName: value }),
       toggleDarkMode: () =>
         set((state) => {
           const newValue = !state.isDarkMode;

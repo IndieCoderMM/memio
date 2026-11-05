@@ -96,92 +96,105 @@ function openRawDatabase(): Promise<IDBDatabase> {
   return databasePromise;
 }
 
-function readLegacyRawCollections(): LegacySnapshot[] {
-  if (typeof window === "undefined") return [];
+function readLegacySnapshot(
+  collection: (typeof legacyCollections)[number],
+): LegacySnapshot | null {
+  if (typeof window === "undefined") return null;
 
-  return legacyCollections.map((collection) => ({
+  const rawValue = window.localStorage.getItem(collection.localStorageKey);
+  if (rawValue === null) return { ...collection, rawValue, entries: [] };
+
+  let parsed: unknown;
+  try {
+    parsed = JSON.parse(rawValue);
+  } catch {
+    return null;
+  }
+
+  if (!parsed || typeof parsed !== "object" || Array.isArray(parsed)) {
+    return null;
+  }
+
+  return {
     ...collection,
-    rawValue: window.localStorage.getItem(collection.localStorageKey),
-    entries: [],
-  }));
+    rawValue,
+    entries: Object.entries(parsed as Record<string, unknown>),
+  };
 }
 
-function readLegacySnapshot(): LegacySnapshot[] {
-  return readLegacyRawCollections().map((collection) => {
-    const { rawValue } = collection;
-    if (rawValue === null) return { ...collection, rawValue, entries: [] };
-
-    let parsed: unknown;
-    try {
-      parsed = JSON.parse(rawValue);
-    } catch {
-      throw new Error(`Could not migrate invalid ${collection.localStorageKey} data`);
-    }
-
-    if (!parsed || typeof parsed !== "object" || Array.isArray(parsed)) {
-      throw new Error(`Could not migrate invalid ${collection.localStorageKey} data`);
-    }
-
-    return {
-      ...collection,
-      rawValue,
-      entries: Object.entries(parsed as Record<string, unknown>),
-    };
-  });
-}
-
-function removeLegacyKeys(snapshots: LegacySnapshot[]) {
-  if (typeof window === "undefined") return;
-
-  for (const snapshot of snapshots) {
-    // Keep a value written by an older open tab after this migration snapshot.
-    if (window.localStorage.getItem(snapshot.localStorageKey) === snapshot.rawValue) {
-      window.localStorage.removeItem(snapshot.localStorageKey);
-    }
+function removeLegacyKey(snapshot: LegacySnapshot) {
+  if (
+    typeof window !== "undefined" &&
+    window.localStorage.getItem(snapshot.localStorageKey) === snapshot.rawValue
+  ) {
+    window.localStorage.removeItem(snapshot.localStorageKey);
   }
 }
 
-async function migrateLegacyCollections(database: IDBDatabase) {
+async function getMigrationMarkers(database: IDBDatabase, ids: string[]) {
   const markerRead = database.transaction(MIGRATION_STORE, "readonly");
   const markerReadCompletion = transactionResult(markerRead);
-  const [marker] = await Promise.all([
-    requestResult(markerRead.objectStore(MIGRATION_STORE).get(LEGACY_MIGRATION_ID)),
+  const store = markerRead.objectStore(MIGRATION_STORE);
+  const [markers] = await Promise.all([
+    Promise.all(ids.map((id) => requestResult(store.get(id)))),
     markerReadCompletion,
   ]);
+  return new Set(ids.filter((_, index) => Boolean(markers[index])));
+}
 
-  if (marker) return;
+async function migrateLegacyCollections(database: IDBDatabase) {
+  const collectionMigrationIds = legacyCollections.map(
+    (collection) => `${LEGACY_MIGRATION_ID}:${collection.localStorageKey}`,
+  );
+  const completedMigrations = await getMigrationMarkers(database, [
+    LEGACY_MIGRATION_ID,
+    ...collectionMigrationIds,
+  ]);
+  if (completedMigrations.has(LEGACY_MIGRATION_ID)) return false;
 
-  const snapshots = readLegacySnapshot();
-  const transaction = database.transaction(allStoreNames, "readwrite");
-  const completion = transactionResult(transaction);
-  const migrationMarker = transaction
-    .objectStore(MIGRATION_STORE)
-    .get(LEGACY_MIGRATION_ID);
-  let importedLegacyData = false;
+  let needsRetry = false;
 
-  migrationMarker.onsuccess = () => {
-    if (migrationMarker.result) return;
-    importedLegacyData = true;
+  for (const [index, collection] of legacyCollections.entries()) {
+    const collectionMigrationId = collectionMigrationIds[index];
+    if (completedMigrations.has(collectionMigrationId)) continue;
 
-    for (const snapshot of snapshots) {
+    const snapshot = readLegacySnapshot(collection);
+    if (!snapshot) {
+      needsRetry = true;
+      continue;
+    }
+
+    const transaction = database.transaction(
+      [snapshot.storeName, MIGRATION_STORE],
+      "readwrite",
+    );
+    const completion = transactionResult(transaction);
+    const metadata = transaction.objectStore(MIGRATION_STORE);
+    const marker = metadata.get(collectionMigrationId);
+    let migrationComplete = false;
+
+    marker.onsuccess = () => {
+      if (marker.result) {
+        migrationComplete = true;
+        return;
+      }
+
       const store = transaction.objectStore(snapshot.storeName);
       for (const [id, value] of snapshot.entries) {
         const existing = store.get(id);
         existing.onsuccess = () => {
-          // Preserve data already written to IndexedDB if the import is retried.
           if (existing.result === undefined) store.put({ id, value });
         };
       }
-    }
+      metadata.put({ id: collectionMigrationId, value: true });
+      migrationComplete = true;
+    };
 
-    transaction.objectStore(MIGRATION_STORE).put({
-      id: LEGACY_MIGRATION_ID,
-      value: true,
-    });
-  };
+    await completion;
+    if (migrationComplete) removeLegacyKey(snapshot);
+  }
 
-  await completion;
-  if (importedLegacyData) removeLegacyKeys(snapshots);
+  return needsRetry;
 }
 
 /** Opens the local database and completes the one-time localStorage migration. */
@@ -189,7 +202,8 @@ export function openDatabase(): Promise<IDBDatabase> {
   if (!readyDatabasePromise) {
     readyDatabasePromise = openRawDatabase()
       .then(async (database) => {
-        await migrateLegacyCollections(database);
+        const needsRetry = await migrateLegacyCollections(database);
+        if (needsRetry) readyDatabasePromise = null;
         return database;
       })
       .catch((error) => {
