@@ -1,6 +1,6 @@
 "use client";
 
-import ModeIndicator from "@/components/blocks/mode-indicator";
+import ModeIndicator, { type Mode } from "@/components/blocks/mode-indicator";
 import { BrainIcon, FrownIcon, PartyPopperIcon, ScanEye } from "lucide-react";
 import { useCardStore } from "../hooks/use-card-store";
 
@@ -11,30 +11,30 @@ const Status = () => {
 
   const errorCount = errors ? Object.keys(errors).length : 0;
 
-  const getStatus = () => {
+  const getStatus = (): Mode => {
     if (mode === "edit")
       return {
         text: `Recall Mode`,
         icon: <BrainIcon />,
-        color: "bg-teal-500/20 text-teal-700",
+        tone: "purple",
       };
     if (mode === "check") {
       return errorCount > 0
         ? {
             text: `${errorCount} Mistakes!`,
             icon: <FrownIcon />,
-            color: "bg-accent-red/20 text-red-700",
+            tone: "down",
           }
         : {
             text: "Correct!",
             icon: <PartyPopperIcon />,
-            color: "bg-yellow-400/20 text-yellow-700",
+            tone: "up",
           };
     }
     return {
       text: "Scan Mode",
       icon: <ScanEye />,
-      color: "bg-sky-700/20 text-sky-700",
+      tone: "blue",
     };
   };
 

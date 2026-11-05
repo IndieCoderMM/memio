@@ -1,29 +1,37 @@
 "use client";
 
+import Button from "@/components/blocks/button";
+import { Card } from "@/components/pouf/surface";
+import { Row, Stack } from "@/components/pouf/layout";
+import { Text } from "@/components/pouf/text";
 import { useAppStore } from "@/lib/app-store";
+import { MoonIcon, SunIcon } from "lucide-react";
 
 export default function DarkModeToggle() {
   const isDarkMode = useAppStore((state) => state.isDarkMode);
   const toggleDarkMode = useAppStore((state) => state.toggleDarkMode);
 
   return (
-    <div className="bg-muted/50 border-border flex items-center justify-between rounded border p-4">
-      <div>
-        <p className="text-foreground font-semibold">Dark Mode</p>
-        <p className="text-muted-foreground text-sm">
-          Use a dark color theme.
-        </p>
-      </div>
-      <label className="relative inline-flex cursor-pointer items-center">
-        <input
-          aria-label="Dark mode"
-          type="checkbox"
-          checked={isDarkMode}
-          onChange={toggleDarkMode}
-          className="peer sr-only"
-        />
-        <div className="bg-border peer-focus:ring-primary peer bg-muted after:border-border peer-checked:bg-primary h-6 w-11 rounded-full peer-focus:ring-2 peer-focus:outline-none after:absolute after:top-[2px] after:left-[2px] after:h-5 after:w-5 after:rounded-full after:border after:bg-white after:transition-all after:content-[''] peer-checked:after:translate-x-full peer-checked:after:border-white"></div>
-      </label>
-    </div>
+    <Card variant="tight">
+      <Row justify="between" gap={3}>
+        <Stack gap={1}>
+          <Text>Color theme</Text>
+          <Text size="sm" muted>
+            {isDarkMode ? "Dark theme is on" : "Light theme is on"}
+          </Text>
+        </Stack>
+        <Button
+          type="button"
+          size="sm"
+          variant={isDarkMode ? "primary" : "secondary"}
+          onClick={toggleDarkMode}
+          aria-pressed={isDarkMode}
+          aria-label={`Switch to ${isDarkMode ? "light" : "dark"} theme`}
+        >
+          {isDarkMode ? <MoonIcon aria-hidden="true" size={16} /> : <SunIcon aria-hidden="true" size={16} />}
+          {isDarkMode ? "Dark" : "Light"}
+        </Button>
+      </Row>
+    </Card>
   );
 }

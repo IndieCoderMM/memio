@@ -1,4 +1,3 @@
-import { buttonClasses } from "@/components/pouf/Button";
 import { Footer } from "@/components/pouf/footer";
 import { Grid, Row, Stack } from "@/components/pouf/layout";
 import { Badge, Blob } from "@/components/pouf/media";
@@ -60,33 +59,15 @@ const sampleSequence = [
 
 export default function HomePage() {
   return (
-    <main className="mx-auto max-w-[1120px] px-(--s5) pb-(--s8) max-[620px]:px-(--s3)">
+    <main className="mx-auto mt-(--s10) max-w-[1120px] px-(--s5) pb-(--s8) max-[620px]:px-(--s3)">
       <Stack gap={10}>
-        <section aria-label="Introduction" className="py-(--s8)">
+        <section aria-label="Introduction" className="pt-(--s10)">
           <Grid cols="sidebar" gap={6}>
             <Stack gap={4}>
               <Eyebrow>Memory practice, made playful</Eyebrow>
               <Heading level={1}>
                 Train your <Highlight>memory</Highlight> one round at a time.
               </Heading>
-              <Text muted>
-                Choose a small challenge, focus for a few minutes, and build a
-                practice habit that fits your day.
-              </Text>
-              <Row gap={3}>
-                <Link
-                  href="/numbers"
-                  className={`${buttonClasses({ size: "lg" })} no-underline`}
-                >
-                  Start with Numbers
-                </Link>
-                <Link
-                  href="/wiki"
-                  className={`${buttonClasses({ size: "lg", variant: "quiet" })} no-underline`}
-                >
-                  Learn memory techniques
-                </Link>
-              </Row>
             </Stack>
           </Grid>
         </section>

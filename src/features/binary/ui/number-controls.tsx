@@ -105,31 +105,30 @@ const NumberControls = () => {
 
   return (
     <ControlPanelLayout renderStatus={() => <NumberStatus />}>
-      <div className="flex flex-1 flex-col gap-2">
-        <div className="grid w-full grid-cols-5">
+      <div className="grid flex-1 grid-cols-1 gap-(--s4) xl:grid-cols-[minmax(0,0.85fr)_minmax(0,1.15fr)]">
+        <div className="flex min-w-0 flex-col gap-(--s3)">
           {mode !== "edit" ? (
-            <div className="col-span-2 flex flex-col gap-2 p-4">
-              <TimerClock key="Scan timer" ref={scanRef} />
-              <hr className="border-border/50 my-4 h-px w-full border" />
-              <NumberRandomizer />
-            </div>
+            <TimerClock key="Scan timer" ref={scanRef} />
           ) : (
-            <div className="col-span-2 flex flex-col gap-2 p-4">
-              <TimerClock key="Recall timer" ref={recallRef} />
-            </div>
+            <TimerClock key="Recall timer" ref={recallRef} />
           )}
-          <div className="col-span-3 p-2">
-            {mode === "check" ? (
-              <CheckResult />
-            ) : mode === "view" ? (
-              <NumberHistory />
-            ) : null}
-          </div>
+          {mode !== "edit" && <NumberRandomizer />}
+        </div>
+        <div className="min-w-0">
+          {mode === "check" ? (
+            <CheckResult />
+          ) : mode === "view" ? (
+            <NumberHistory />
+          ) : (
+            <p className="rounded-control bg-bg p-(--s4) text-muted cushion-field">
+              Enter the binary sequence on the board, then check your recall.
+            </p>
+          )}
         </div>
       </div>
-      <div className="mt-auto flex w-full justify-center gap-4 p-4">
+      <div className="mt-auto flex w-full flex-wrap justify-center gap-(--s2) pt-(--s4)">
         {mode !== "edit" ? (
-          <Button size="lg" onClick={onRecall} className="min-w-[250px]">
+          <Button size="lg" onClick={onRecall} className="min-w-[150px] flex-1">
             <FlameIcon className="h-6 w-6" />
             Recall
           </Button>
@@ -137,13 +136,13 @@ const NumberControls = () => {
           <>
             <Button
               onClick={onReset}
-              variant="secondary"
-              className="min-w-[250px]"
+              variant="destructive"
+              className="min-w-[150px] flex-1"
             >
               <ThumbsDownIcon className="h-6 w-6" />
               Give Up
             </Button>
-            <Button onClick={onCheck} className="min-w-[250px]">
+            <Button onClick={onCheck} className="min-w-[150px] flex-1">
               <SearchCheckIcon className="h-6 w-6" />
               Check
             </Button>

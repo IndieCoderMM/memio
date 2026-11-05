@@ -1,6 +1,7 @@
 "use client";
 
-import Button from "@/components/blocks/button";
+import { Stack } from "@/components/pouf/layout";
+import { Text } from "@/components/pouf/text";
 import { BoxSelectIcon, BrushCleaningIcon, EraserIcon } from "lucide-react";
 import PieceButton from "../blocks/piece-button";
 import { useChessStore } from "../hooks/use-chess-store";
@@ -9,7 +10,6 @@ import { ChessPiece } from "../types";
 type Button = {
   piece: ChessPiece;
   label: string;
-  variant?: "left" | "right" | "middle";
   color?: "white" | "black";
 };
 
@@ -20,20 +20,20 @@ type Buttons = {
 
 const buttons: Buttons = {
   white: [
-    { piece: "wK", label: "King", variant: "left" },
+    { piece: "wK", label: "King" },
     { piece: "wQ", label: "Queen" },
     { piece: "wR", label: "Rook" },
     { piece: "wB", label: "Bishop" },
     { piece: "wN", label: "Knight" },
-    { piece: "wP", label: "Pawn", variant: "right" },
+    { piece: "wP", label: "Pawn" },
   ],
   black: [
-    { piece: "bK", label: "King", variant: "left", color: "black" },
+    { piece: "bK", label: "King", color: "black" },
     { piece: "bQ", label: "Queen", color: "black" },
     { piece: "bR", label: "Rook", color: "black" },
     { piece: "bB", label: "Bishop", color: "black" },
     { piece: "bN", label: "Knight", color: "black" },
-    { piece: "bP", label: "Pawn", color: "black", variant: "right" },
+    { piece: "bP", label: "Pawn", color: "black" },
   ],
 } as const;
 
@@ -47,60 +47,62 @@ const EditorBar = () => {
   };
 
   return (
-    <div className="bg-surface flex flex-col gap-2 rounded-lg p-2">
-      <div className="grid grid-cols-6">
-        {buttons.white.map(({ piece, label, variant }) => (
-          <PieceButton
-            key={piece}
-            onClick={handlePieceClick(piece)}
-            variant={variant || "middle"}
-            isActive={activePiece === piece}
-          >
-            {label}
-          </PieceButton>
-        ))}
-      </div>
-      <div className="grid grid-cols-6">
-        {buttons.black.map(({ piece, label, variant }) => (
-          <PieceButton
-            key={piece}
-            onClick={handlePieceClick(piece)}
-            variant={variant || "middle"}
-            color="black"
-            isActive={activePiece === piece}
-          >
-            {label}
-          </PieceButton>
-        ))}
-      </div>
-      <div className="grid grid-cols-3">
-        <PieceButton
-          onClick={() => setActivePiece(null)}
-          variant={"left"}
-          color="black"
-        >
-          <BoxSelectIcon className="mr-4 inline h-4 w-4" />
+    <Stack gap={3}>
+      <section className="flex flex-col gap-(--s2)">
+        <Text size="sm" muted>
+          White pieces
+        </Text>
+        <div className="grid grid-cols-3 gap-(--s2) sm:grid-cols-6">
+          {buttons.white.map(({ piece, label }) => (
+            <PieceButton
+              key={piece}
+              onClick={handlePieceClick(piece)}
+              isActive={activePiece === piece}
+            >
+              {label}
+            </PieceButton>
+          ))}
+        </div>
+      </section>
+      <section className="flex flex-col gap-(--s2)">
+        <Text size="sm" muted>
+          Black pieces
+        </Text>
+        <div className="grid grid-cols-3 gap-(--s2) sm:grid-cols-6">
+          {buttons.black.map(({ piece, label }) => (
+            <PieceButton
+              key={piece}
+              onClick={handlePieceClick(piece)}
+              color="black"
+              isActive={activePiece === piece}
+            >
+              {label}
+            </PieceButton>
+          ))}
+        </div>
+      </section>
+      <div className="grid grid-cols-1 gap-(--s2) sm:grid-cols-3">
+        <PieceButton onClick={() => setActivePiece(null)} color="black">
+          <BoxSelectIcon className="h-4 w-4" />
           Unselect
         </PieceButton>
         <PieceButton
           onClick={() => setActivePiece("eraser")}
-          variant={"middle"}
           color="black"
           isActive={activePiece === "eraser"}
         >
-          <EraserIcon className="mr-4 inline h-4 w-4" />
+          <EraserIcon className="h-4 w-4" />
           Eraser
         </PieceButton>
         <PieceButton
           onClick={() => setBoard({})}
-          variant={"right"}
           color="black"
         >
-          <BrushCleaningIcon className="mr-4 inline h-4 w-4" />
+          <BrushCleaningIcon className="h-4 w-4" />
           Reset
         </PieceButton>
       </div>
-    </div>
+    </Stack>
   );
 };
 

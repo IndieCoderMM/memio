@@ -1,5 +1,5 @@
 import clsx from "clsx";
-import { LucideIcon } from "lucide-react";
+import { LucideIcon, MenuIcon } from "lucide-react";
 import type { ReactNode } from "react";
 
 export interface NavbarLink {
@@ -31,13 +31,10 @@ export function Navbar({
 }: NavbarProps) {
   return (
     <nav
-      className="pouf-navbar bg-surface cushion-card rounded-card flex h-16 items-center gap-(--s4) pr-(--s3) pl-(--s5)"
+      className="pouf-navbar bg-surface cushion-card rounded-card fixed top-2 left-1/2 mx-auto flex h-16 w-2xl -translate-x-1/2 items-center gap-(--s4) p-(--s3) pl-(--s3)"
       aria-label={label}
     >
-      <div className="text-ink mr-auto flex items-center gap-(--s2) text-[20px] font-black">
-        {brand}
-      </div>
-      <div className="pouf-navbar__links flex items-center gap-[2px]">
+      <div className="pouf-navbar__links flex items-center justify-center gap-[2px]">
         {links.map((l) => (
           <a
             key={l.href}
@@ -63,14 +60,15 @@ export function Navbar({
         ))}
       </div>
       {links.length > 0 ? (
-        <details className="pouf-navbar__mobile relative ml-auto">
+        <details className="pouf-navbar__mobile relative mr-auto">
           <summary
             className="text-ink rounded-pill inline-flex min-h-[40px] cursor-pointer items-center px-(--s3) font-extrabold hover:bg-[rgba(201,168,255,0.25)]"
             style={{ listStyle: "none" }}
           >
-            Menu
+            <span className="sr-only">Menus</span>
+            <MenuIcon />
           </summary>
-          <div className="bg-surface rounded-control cushion-card absolute top-[calc(100%+12px)] right-0 z-20 flex min-w-[190px] flex-col gap-(--s1) p-(--s2)">
+          <div className="bg-surface rounded-control cushion-card absolute top-[calc(100%+12px)] left-0 z-20 flex min-w-[190px] flex-col gap-(--s1) p-(--s2)">
             {links.map((link) => (
               <a
                 key={link.href}
@@ -95,7 +93,7 @@ export function Navbar({
         </details>
       ) : null}
       {actions && (
-        <div className="pouf-navbar__actions flex items-center gap-(--s2)">
+        <div className="pouf-navbar__actions ml-auto flex items-center gap-(--s2)">
           {actions}
         </div>
       )}

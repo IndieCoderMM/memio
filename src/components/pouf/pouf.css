@@ -1448,7 +1448,7 @@
 .pouf-navbar__mobile {
   display: none;
 }
-@container (max-width: 760px) {
+@container (max-width: 540px) {
   .pouf-navbar__links {
     display: none;
   }

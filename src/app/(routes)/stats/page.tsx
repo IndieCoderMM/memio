@@ -1,17 +1,22 @@
+import { Stack } from "@/components/pouf/layout";
+import { Eyebrow, Heading, Text } from "@/components/pouf/text";
 import StatsDashboard from "@/features/stats/ui/stats-dashboard";
 
 export default function Stats() {
   return (
-    <div className="bg-background relative min-h-screen">
-      <main className="mx-auto max-w-7xl px-6 py-12">
-        <div className="mb-12">
-          <h1 className="text-foreground mb-4 text-4xl font-bold">Your Stats</h1>
-          <p className="text-muted-foreground text-lg">
-            Progress and achievements from your saved game sessions.
-          </p>
-        </div>
+    <main className="mx-auto max-w-[1280px] px-(--s8) py-(--s8) max-[900px]:px-(--s4) max-[620px]:py-(--s5)">
+      <Stack gap={6}>
+        <header>
+          <Stack gap={2}>
+            <Eyebrow>Practice history</Eyebrow>
+            <Heading level={1}>Your progress</Heading>
+            <Text muted>
+              Sessions, accuracy, and milestones from your saved games.
+            </Text>
+          </Stack>
+        </header>
         <StatsDashboard />
-      </main>
-    </div>
+      </Stack>
+    </main>
   );
 }

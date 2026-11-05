@@ -27,12 +27,13 @@ const Cell = ({
         <AnimatedNumber
           isStatic={!animated}
           className={cn(
-            "border-border flex h-10 w-10 items-center justify-center rounded-sm border text-center font-mono text-2xl font-bold",
+            "flex size-10 items-center justify-center rounded-[12px] bg-surface text-center font-mono text-2xl font-bold text-ink cushion-field",
+            error ? "cushion-field-focus" : "",
             error
-              ? "border-accent-red"
+              ? "ring-2 ring-pink"
               : isCorrect
-                ? "border-accent-green"
-                : "border-border",
+                ? "ring-2 ring-mint"
+                : "",
           )}
           num={Number(value) ?? 0}
         />
@@ -40,12 +41,12 @@ const Cell = ({
         <input
           ref={cbRef}
           className={cn(
-            "border-border bg-muted hover:bg-muted/30 focus-visible:bg-muted/30 focus-visible:ring-primary flex h-10 w-10 items-center justify-center rounded-sm border text-center font-mono text-2xl font-bold focus:outline-none focus-visible:ring-1",
+            "size-10 rounded-[12px] bg-bg text-center font-mono text-2xl font-bold text-ink outline-none cushion-field focus-visible:cushion-field-focus",
             error
-              ? "border-destructive"
+              ? "ring-2 ring-pink"
               : isCorrect
-                ? "border-accent-green"
-                : "border-border",
+                ? "ring-2 ring-mint"
+                : "",
           )}
           maxLength={1}
           type="number"
@@ -57,7 +58,11 @@ const Cell = ({
         />
       )}
       {error && (
-        <span className="bg-destructive absolute -top-1 -right-0.5 flex h-4 w-4 items-center justify-center rounded-full text-[10px] text-white">
+        <span
+          role="img"
+          aria-label={`Incorrect: ${error}`}
+          className="absolute -top-1 -right-1 flex size-4 items-center justify-center rounded-full bg-pink text-[10px] font-black text-[var(--on-accent)] cushion-control"
+        >
           {error}
         </span>
       )}
@@ -66,7 +71,7 @@ const Cell = ({
 };
 
 export const EmptyCell = () => (
-  <span className="border-border bg-card flex h-10 w-10 items-center justify-center rounded-sm border text-center font-mono text-2xl font-bold" />
+  <span className="size-10 rounded-[12px] bg-bg cushion-field" aria-hidden="true" />
 );
 
 export default Cell;

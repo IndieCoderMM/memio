@@ -1,36 +1,32 @@
 "use client";
 
+import { Badge, Blob } from "@/components/pouf/media";
+import { Row } from "@/components/pouf/layout";
+import { Text } from "@/components/pouf/text";
+import type { Tone } from "@/components/pouf/tone";
 import { Encoder } from "@/utils/Encoder";
-import { cn } from "@/utils/tailwind";
+import type { ReactElement } from "react";
 
-type Mode = {
+export type Mode = {
   text: string;
-  icon: React.ReactNode;
-  color: string;
+  icon: ReactElement;
+  tone: Tone;
 };
 
-const ModeIndicator = ({
+export default function ModeIndicator({
   mode,
   activeKey,
 }: {
   mode: Mode;
   activeKey: string | null;
-}) => {
-  const { text, icon, color } = mode;
-
+}) {
   return (
-    <div className="flex w-full items-center justify-between px-2">
-      <div className={`flex items-center gap-2`}>
-        <div className={cn("rounded-sm p-2", color)}>{icon}</div>
-        <h2 className="text-base font-bold capitalize">{text}</h2>
-        {activeKey ? (
-          <span className="font-mono text-sm font-medium">
-            [{Encoder.encodeId(Number(activeKey))}]
-          </span>
-        ) : null}
-      </div>
-    </div>
+    <Row gap={2} wrap={false}>
+      <Blob icon={mode.icon} tone={mode.tone} size="sm" />
+      <Text>{mode.text}</Text>
+      {activeKey && (
+        <Badge tone="blue">#{Encoder.encodeId(Number(activeKey))}</Badge>
+      )}
+    </Row>
   );
-};
-
-export default ModeIndicator;
+}

@@ -41,44 +41,45 @@ const BoardControl = () => {
 
   return (
     <ControlPanelLayout renderStatus={() => <BoardStatus />}>
-      {mode === "edit" ? (
-        <div className="flex h-full flex-col items-center justify-between gap-2 p-2 pb-4">
-          <div className="grid w-full grid-cols-5">
-            <div className="col-span-2 flex flex-col gap-2">
+      <div className="grid flex-1 grid-cols-1 gap-(--s4) xl:grid-cols-[minmax(0,0.85fr)_minmax(0,1.15fr)]">
+        <div className="flex min-w-0 flex-col gap-(--s3)">
+          {mode === "edit" ? (
+            <>
               <TimerClock key="Recall timer" ref={recallRef} />
-            </div>
-            <div className="col-span-full pt-4">
               <EditorBar />
-            </div>
-          </div>
-          <div className="mt-auto flex w-full justify-end gap-4">
-            <Button onClick={onCheck} className="min-w-[250px]" size="lg">
-              <SearchCheckIcon className="h-6! w-6!" />
-              Check
-            </Button>
-          </div>
-        </div>
-      ) : (
-        <div className="flex w-full flex-1 flex-col gap-2 p-2 pb-4">
-          <div className="grid w-full grid-cols-5">
-            <div className="col-span-2 flex flex-col gap-4">
+            </>
+          ) : (
+            <>
               <TimerClock key="Scan timer" ref={scanRef} />
               <BoardRandomizer />
-            </div>
-            <div className="col-span-3 px-4">
-              {mode === "check" ? <CheckResult /> : <BoardHistory />}
-            </div>
-          </div>
-          <div className="mt-auto flex w-full items-center justify-end gap-4">
-            {mode === "view" ? (
-              <Button size="lg" onClick={onRecall} className="min-w-[250px]">
-                <FlameIcon className="h-5! w-5!" />
-                <span className="inline-block w-[40%]">Start Recall</span>
-              </Button>
-            ) : null}
-          </div>
+            </>
+          )}
         </div>
-      )}
+        <div className="min-w-0">
+          {mode === "check" ? (
+            <CheckResult />
+          ) : mode === "view" ? (
+            <BoardHistory />
+          ) : (
+            <p className="rounded-control bg-bg p-(--s4) text-muted cushion-field">
+              Place the remembered pieces on the board, then check your recall.
+            </p>
+          )}
+        </div>
+      </div>
+      <div className="mt-auto flex w-full flex-wrap justify-end gap-(--s2) pt-(--s4)">
+        {mode === "edit" ? (
+          <Button onClick={onCheck} size="lg" className="min-w-[150px] flex-1">
+            <SearchCheckIcon className="h-5 w-5" />
+            Check
+          </Button>
+        ) : mode === "view" ? (
+          <Button size="lg" onClick={onRecall} className="min-w-[150px] flex-1">
+            <FlameIcon className="h-5 w-5" />
+            Start Recall
+          </Button>
+        ) : null}
+      </div>
     </ControlPanelLayout>
   );
 };

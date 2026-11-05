@@ -1,17 +1,15 @@
+import { GamePage } from "@/components/layouts/game-page";
 import NumberBoard from "@/features/numbers/ui/number-board";
 import NumberControls from "@/features/numbers/ui/number-controls";
 
-const NumberPage = () => {
+export default function NumberPage() {
   return (
-    <div className="grid lg:grid-cols-2">
-      <div className="col-span-1 flex flex-col items-center p-4">
-        <NumberBoard />
-      </div>
-      <div className="col-span-1 flex flex-col items-center p-4">
-        <NumberControls />
-      </div>
-    </div>
+    <GamePage
+      title="Numbers"
+      description="Memorize a sequence, then recall it one digit at a time."
+      tone="blue"
+      board={<NumberBoard />}
+      controls={<NumberControls />}
+    />
   );
-};
-
-export default NumberPage;
+}

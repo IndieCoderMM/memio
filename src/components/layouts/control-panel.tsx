@@ -1,21 +1,24 @@
-import React, { PropsWithChildren } from "react";
+import type { PropsWithChildren, ReactNode } from "react";
+import { Card } from "@/components/pouf/surface";
 
 type ControlPanelLayoutProps = PropsWithChildren<{
-  renderStatus: () => React.ReactNode;
+  renderStatus: () => ReactNode;
 }>;
 
-const ControlPanelLayout = ({
+export default function ControlPanelLayout({
   renderStatus,
   children,
-}: ControlPanelLayoutProps) => {
+}: ControlPanelLayoutProps) {
   return (
-    <div className="bg-card border-border flex h-full w-full flex-col items-center justify-between border">
-      <div className="bg-muted/50 border-border flex w-full items-center border-b p-2">
-        {renderStatus()}
+    <Card variant="flush">
+      <div className="flex min-h-[540px] flex-col">
+        <div className="mx-(--s4) mt-(--s4) flex min-h-16 items-center rounded-control bg-bg px-(--s4) py-(--s3) cushion-field">
+          {renderStatus()}
+        </div>
+        <div className="flex min-w-0 flex-1 flex-col p-(--s4)">
+          {children}
+        </div>
       </div>
-      <div className="flex w-full flex-1 flex-col">{children}</div>
-    </div>
+    </Card>
   );
-};
-
-export default ControlPanelLayout;
+}

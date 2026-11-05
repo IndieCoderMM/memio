@@ -1,9 +1,11 @@
+import { IconButton } from "@/components/pouf/Button";
+import { Badge } from "@/components/pouf/media";
+import { Row, Stack } from "@/components/pouf/layout";
+import { Card, RowCard } from "@/components/pouf/surface";
+import { Heading, Text } from "@/components/pouf/text";
 import { fromDate } from "@/utils/day";
 import { Encoder } from "@/utils/Encoder";
-import { cn } from "@/utils/tailwind";
 import { LoaderIcon, RotateCwIcon, Trash2Icon } from "lucide-react";
-import React from "react";
-import { Button } from "../ui/button";
 
 interface HistoryItemData {
   id: string;
@@ -19,97 +21,68 @@ interface HistoryListProps {
   refreshing: boolean;
 }
 
-const HistoryList: React.FC<HistoryListProps> = ({
+const HistoryList = ({
   title,
   items,
   onLoad,
   onDelete,
   onRefresh,
   refreshing,
-}) => {
+}: HistoryListProps) => {
   return (
-    <div className="border-border bg-muted flex flex-col justify-between border p-2">
-      <div className="mb-1 flex w-full items-center justify-between">
-        <h2 className="text-md">
-          <span className="text-muted-foreground font-semibold">{title}</span>
-        </h2>
-        <Button
-          onClick={onRefresh}
-          aria-label="Refresh history"
-          title="Refresh history"
-          size="icon"
-          variant="ghost"
-        >
-          {refreshing ? (
-            <LoaderIcon className="inline h-5 w-5 animate-spin" />
-          ) : (
-            <RotateCwIcon className="inline h-5 w-5" />
-          )}
-        </Button>
-      </div>
-      <ul className="flex max-h-[200px] min-h-[150px] flex-col gap-2 overflow-y-auto rounded-sm">
-        {items?.map((item) => (
-          <li key={item.id}>
-            <HistoryItem
-              id={item.id}
-              isActive={item.isActive}
-              handleLoad={onLoad}
-              handleDelete={onDelete}
-            />
-          </li>
-        ))}
-      </ul>
-    </div>
-  );
-};
+    <Card variant="tight">
+      <Stack gap={3}>
+        <Row justify="between">
+          <Stack gap={1}>
+            <Heading level={3}>{title}</Heading>
+            <Text size="sm" muted>{items.length} saved</Text>
+          </Stack>
+          <IconButton
+            icon={refreshing ? <LoaderIcon size={18} /> : <RotateCwIcon size={18} />}
+            label="Refresh history"
+            loading={refreshing}
+            onClick={onRefresh}
+            variant="quiet"
+          />
+        </Row>
 
-const HistoryItem = ({
-  id,
-  isActive,
-  handleLoad,
-  handleDelete,
-}: {
-  id: string;
-  isActive: boolean;
-  handleLoad: (key: string) => void;
-  handleDelete: (key: string) => void;
-}) => {
-  const date = new Date(Number(id));
-  return (
-    <div
-      className={cn(
-        "bg-muted border-border group flex items-center justify-between border px-2 py-1",
-        isActive ? "border-accent border-2" : "hover:brightness-105",
-      )}
-    >
-      <div className="pl-1">
-        <Button
-          onClick={() => handleLoad(id)}
-          className={cn(
-            "text-accent-green hover:text-primary pl-0 text-left font-mono text-lg underline",
-            isActive && "text-accent",
-          )}
-          aria-label={`View board`}
-          title={`View board`}
-          variant="link"
-        >
-          {Encoder.encodeId(Number(id))}
-        </Button>
-        <span className="text-foreground/80 block text-xs">
-          {fromDate(date)}
-        </span>
-      </div>
-      <Button
-        onClick={() => handleDelete(id)}
-        aria-label="Delete board"
-        title="Delete board"
-        variant="ghost"
-        className="hover:bg-destructive text-muted-foreground invisible group-hover:visible"
-        size="icon"
-      >
-        <Trash2Icon />
-      </Button>
-    </div>
+        {items.length > 0 ? (
+          <div className="flex max-h-[300px] flex-col gap-(--s2) overflow-y-auto pr-(--s2)">
+            {items.map((item) => (
+              <RowCard key={item.id}>
+                <Row justify="between" wrap={false}>
+                  <button
+                    type="button"
+                    onClick={() => onLoad(item.id)}
+                    aria-label={`Load saved entry from ${fromDate(new Date(Number(item.id)))}`}
+                    className="min-w-0 flex-1 cursor-pointer text-left text-ink"
+                  >
+                    <Stack gap={1}>
+                      <Text mono>{Encoder.encodeId(Number(item.id))}</Text>
+                      <Text size="sm" muted>
+                        {fromDate(new Date(Number(item.id)))}
+                      </Text>
+                    </Stack>
+                  </button>
+                  <Row gap={2} wrap={false}>
+                    {item.isActive && <Badge tone="mint">Current</Badge>}
+                    <IconButton
+                      icon={<Trash2Icon size={16} />}
+                      label={`Delete saved entry ${Encoder.encodeId(Number(item.id))}`}
+                      onClick={() => onDelete(item.id)}
+                      variant="quiet"
+                      size="sm"
+                    />
+                  </Row>
+                </Row>
+              </RowCard>
+            ))}
+          </div>
+        ) : (
+          <Text size="sm" muted>No saved entries yet.</Text>
+        )}
+      </Stack>
+    </Card>
   );
 };
 

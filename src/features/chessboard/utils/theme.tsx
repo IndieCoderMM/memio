@@ -42,8 +42,8 @@ const governorTheme: PieceTheme = {
 };
 
 export const boardTheme = {
-  lightSquareColor: "#D8D9D8",
-  darkSquareColor: "#A8A9A8",
+  lightSquareColor: "var(--surface)",
+  darkSquareColor: "color-mix(in srgb, var(--purple) 38%, var(--surface))",
   pieces: getCustomPieces(),
 };
 

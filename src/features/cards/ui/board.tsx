@@ -3,13 +3,12 @@
 import Carousel from "@/components/blocks/carousel";
 import { cn } from "@/utils/tailwind";
 import Image, { StaticImageData } from "next/image";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { useCardStore } from "../hooks/use-card-store";
 import { cardBackImage, cardImages } from "../utils/images";
 
 const CardBoard = () => {
   const [cards, setCards] = useState<StaticImageData[]>([]);
-  const cells = useRef<Array<HTMLInputElement | null>>([]);
   const generated = useCardStore((s) => s.generated);
   const errors = useCardStore((s) => s.errors);
   const tried = useCardStore((s) => s.tried);
@@ -21,7 +20,6 @@ const CardBoard = () => {
   useEffect(() => {
     if (mode === "view" && generated) {
       const imgs = [];
-      console.log("Generated cards:", generated);
       for (let c of generated) {
         imgs.push(cardImages[c]);
       }
@@ -29,14 +27,6 @@ const CardBoard = () => {
       setCards(imgs);
     }
   }, [generated, mode]);
-
-  useEffect(() => {
-    if (mode === "edit") {
-      if (cells.current.length > 0) {
-        cells.current[0]?.focus();
-      }
-    }
-  }, [mode]);
 
   const handleDrop = (e: React.DragEvent<HTMLDivElement>) => {
     e.preventDefault();
@@ -57,7 +47,7 @@ const CardBoard = () => {
         ) : mode === "view" ? (
           <Carousel images={[cardBackImage]} />
         ) : (
-          <div className="grid grid-cols-10 place-items-center gap-1">
+          <div className="grid grid-cols-4 place-items-center gap-(--s2) sm:grid-cols-7 xl:grid-cols-10">
             {generated?.map((card, index) => {
               const cardName = mode === "edit" ? tried?.[index] : card;
 
@@ -65,11 +55,11 @@ const CardBoard = () => {
                 <div
                   key={`${cardName}-${index}`}
                   className={cn(
-                    "bg-card border-border relative h-20 w-full border",
+                    "relative aspect-[5/7] w-full rounded-[10px] bg-surface p-1 cushion-field",
                     mode === "check" && {
-                      "border-accent-green": !errors?.[index],
-                      "border-accent-red": errors?.[index],
-                      "border-orange-700":
+                      "ring-2 ring-mint": !errors?.[index],
+                      "ring-2 ring-pink": errors?.[index],
+                      "ring-2 ring-orange":
                         errors?.[index] && errors[index] === "00",
                     },
                   )}
@@ -77,13 +67,13 @@ const CardBoard = () => {
                   <Image
                     id={`${index}`}
                     src={cardName ? cardImages[cardName] : cardBackImage}
-                    alt={`Card ${cardName}`}
+                    alt={cardName ? `Card ${cardName}` : `Empty card slot ${index + 1}`}
                     width={200}
                     height={300}
                     draggable={false}
                     onDragOver={(e) => e.preventDefault()}
                     onDrop={handleDrop}
-                    className={`h-full w-auto object-contain`}
+                    className="h-full w-full object-contain"
                   />
                 </div>
               );
@@ -91,7 +81,7 @@ const CardBoard = () => {
             {Array.from({ length: emptyCells }).map((_, index) => (
               <div
                 key={`empty-${index}`}
-                className="bg-surface border-surface relative h-20 w-full border"
+                className="aspect-[5/7] w-full rounded-[10px] bg-bg cushion-field"
               ></div>
             ))}
           </div>

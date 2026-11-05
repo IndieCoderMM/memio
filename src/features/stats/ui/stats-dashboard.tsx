@@ -1,20 +1,16 @@
 "use client";
 
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
+import { Badge, Blob } from "@/components/pouf/media";
+import { Grid, Row, Stack } from "@/components/pouf/layout";
+import { Card, RowCard } from "@/components/pouf/surface";
+import { Heading, Text } from "@/components/pouf/text";
+import { Stat } from "@/components/pouf/readout";
 import { useSessionRecords } from "@/features/stats/hooks/use-session-records";
 import AccuracyChart from "@/features/stats/ui/accuracy-chart";
 import {
   calculateSessionStats,
   formatRecallTime,
 } from "@/features/stats/utils/stats";
-import { Flame, Trophy, Zap } from "lucide-react";
-import { useMemo } from "react";
 import {
   Bar,
   BarChart,
@@ -26,24 +22,30 @@ import {
   XAxis,
   YAxis,
 } from "recharts";
+import { useMemo } from "react";
+
+const tick = { fill: "var(--muted)", fontSize: 12 };
+const tooltipStyle = {
+  backgroundColor: "var(--surface)",
+  border: "none",
+  borderRadius: "20px",
+  boxShadow: "var(--pouf-card)",
+  color: "var(--ink)",
+};
 
 export default function StatsDashboard() {
   const { records, isLoading, error } = useSessionRecords();
   const stats = useMemo(() => calculateSessionStats(records), [records]);
 
   if (isLoading) {
-    return (
-      <p className="text-muted-foreground" role="status">
-        Loading saved sessions…
-      </p>
-    );
+    return <Text muted>Loading saved sessions…</Text>;
   }
 
   if (error) {
     return (
-      <p className="text-destructive" role="alert">
-        {error}
-      </p>
+      <Card variant="tight">
+        <Text>{error}</Text>
+      </Card>
     );
   }
 
@@ -52,88 +54,98 @@ export default function StatsDashboard() {
     .map((game) => ({
       game: game.label,
       sessions: game.totalSessions,
-      accuracy: game.weightedAccuracy === null ? null : game.weightedAccuracy * 100,
+      accuracy:
+        game.weightedAccuracy === null ? null : game.weightedAccuracy * 100,
     }));
   const hasWeeklyActivity = stats.weeklyActivity.some((day) => day.sessions > 0);
 
   return (
-    <div className="space-y-8">
-      {records.length === 0 ? (
-        <div className="bg-card border-border border p-5">
-          <h2 className="text-foreground font-semibold">
-            No saved sessions yet
-          </h2>
-          <p className="text-muted-foreground mt-1 text-sm">
-            Finish a memory game and your progress will appear here.
-          </p>
-        </div>
-      ) : null}
+    <Stack gap={5}>
+      {records.length === 0 && (
+        <Card variant="tight">
+          <Row gap={3} align="top">
+            <Blob icon="info" tone="blue" size="sm" />
+            <Stack gap={1}>
+              <Heading level={3}>No saved sessions yet</Heading>
+              <Text muted>
+                Finish a memory game and your progress will appear here.
+              </Text>
+            </Stack>
+          </Row>
+        </Card>
+      )}
 
-      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
-        <SummaryCard
-          title="Total Sessions"
+      <Grid cols={4} gap={3}>
+        <Stat
+          label="Total sessions"
           value={stats.totalSessions.toLocaleString()}
+          icon="history"
+          tone="blue"
         />
-        <SummaryCard
-          title="Item-weighted Accuracy"
+        <Stat
+          label="Item-weighted accuracy"
           value={
             stats.weightedAccuracy === null
               ? "—"
               : `${Math.round(stats.weightedAccuracy * 100)}%`
           }
+          icon="target"
+          tone="mint"
         />
-        <SummaryCard
-          title="Fastest Recall"
+        <Stat
+          label="Fastest recall"
           value={
             stats.fastestRecall
               ? formatRecallTime(stats.fastestRecall.recallMs)
               : "—"
           }
+          icon="clock"
+          tone="purple"
           detail={stats.fastestRecall?.label}
         />
-        <SummaryCard
-          title="Current Streak"
+        <Stat
+          label="Current streak"
           value={stats.currentStreak.toLocaleString()}
+          icon="flame"
+          tone="orange"
           detail={stats.currentStreak === 1 ? "day" : "days"}
         />
-      </div>
+      </Grid>
 
-      <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
-        <Card className="border-border bg-card">
-          <CardHeader>
-            <CardTitle>Accuracy History</CardTitle>
-            <CardDescription>Item accuracy by game and session date</CardDescription>
-          </CardHeader>
-          <CardContent>
-            <AccuracyChart records={records} />
-          </CardContent>
-        </Card>
+      <Grid cols="sidebar" gap={4}>
+        <ChartCard
+          title="Accuracy history"
+          description="Item accuracy by game and session date."
+        >
+          <AccuracyChart records={records} />
+        </ChartCard>
 
-        <Card className="border-border bg-card">
-          <CardHeader>
-            <CardTitle>Game Breakdown</CardTitle>
-            <CardDescription>Sessions and item-weighted accuracy by game</CardDescription>
-          </CardHeader>
-          <CardContent>
-            {gameData.length === 0 ? (
-              <EmptyChartState>No game sessions to break down yet.</EmptyChartState>
-            ) : (
-              <ResponsiveContainer width="100%" height={260}>
+        <ChartCard
+          title="Game breakdown"
+          description="Sessions and item-weighted accuracy by game."
+        >
+          {gameData.length === 0 ? (
+            <EmptyChartState>No game sessions to break down yet.</EmptyChartState>
+          ) : (
+            <div className="h-[260px] min-w-0 w-full">
+              <ResponsiveContainer width="100%" height="100%">
                 <ComposedChart data={gameData}>
-                  <CartesianGrid strokeDasharray="3 3" />
-                  <XAxis dataKey="game" />
-                  <YAxis yAxisId="sessions" allowDecimals={false} />
+                  <CartesianGrid stroke="rgba(113,96,155,0.2)" strokeDasharray="3 3" />
+                  <XAxis dataKey="game" tick={tick} axisLine={false} tickLine={false} />
+                  <YAxis yAxisId="sessions" allowDecimals={false} tick={tick} axisLine={false} tickLine={false} />
                   <YAxis
                     yAxisId="accuracy"
                     orientation="right"
                     domain={[0, 100]}
                     tickFormatter={(value) => `${value}%`}
+                    tick={tick}
+                    axisLine={false}
+                    tickLine={false}
                   />
                   <Tooltip
+                    contentStyle={tooltipStyle}
                     formatter={(value, name) => [
-                      name === "accuracy"
-                        ? `${Number(value).toFixed(1)}%`
-                        : value,
+                      name === "accuracy" ? `${Number(value).toFixed(1)}%` : value,
                       name === "accuracy" ? "Accuracy" : "Sessions",
                     ]}
                   />
@@ -141,122 +153,125 @@ export default function StatsDashboard() {
                     yAxisId="sessions"
                     dataKey="sessions"
                     name="Sessions"
-                    fill="#8b5cf6"
+                    fill="var(--purple)"
+                    radius={[12, 12, 0, 0]}
                   />
                   <Line
                     yAxisId="accuracy"
                     type="monotone"
                     dataKey="accuracy"
                     name="Accuracy"
-                    stroke="#34d399"
+                    stroke="var(--mint)"
                     strokeWidth={3}
+                    dot={{ fill: "var(--mint)", r: 4 }}
                   />
                 </ComposedChart>
               </ResponsiveContainer>
-            )}
-          </CardContent>
-        </Card>
+            </div>
+          )}
+        </ChartCard>
+      </Grid>
 
-        <Card className="border-border bg-card">
-          <CardHeader>
-            <CardTitle>This Week</CardTitle>
-            <CardDescription>Sessions each day, Monday to Sunday</CardDescription>
-          </CardHeader>
-          <CardContent>
-            {!hasWeeklyActivity ? (
-              <EmptyChartState>No saved sessions this week yet.</EmptyChartState>
-            ) : (
-              <ResponsiveContainer width="100%" height={260}>
+      <Grid cols="sidebar" gap={4}>
+        <ChartCard
+          title="This week"
+          description="Sessions each day, Monday to Sunday."
+        >
+          {!hasWeeklyActivity ? (
+            <EmptyChartState>No saved sessions this week yet.</EmptyChartState>
+          ) : (
+            <div className="h-[260px] min-w-0 w-full">
+              <ResponsiveContainer width="100%" height="100%">
                 <BarChart data={stats.weeklyActivity}>
-                  <CartesianGrid strokeDasharray="3 3" />
-                  <XAxis dataKey="label" />
-                  <YAxis allowDecimals={false} />
+                  <CartesianGrid stroke="rgba(113,96,155,0.2)" strokeDasharray="3 3" />
+                  <XAxis dataKey="label" tick={tick} axisLine={false} tickLine={false} />
+                  <YAxis allowDecimals={false} tick={tick} axisLine={false} tickLine={false} />
                   <Tooltip
+                    contentStyle={tooltipStyle}
                     formatter={(value) => [value, "Sessions"]}
                     labelFormatter={(label, payload) =>
                       payload[0]?.payload.date ?? label
                     }
                   />
-                  <Bar dataKey="sessions" name="Sessions" fill="#f97316" />
+                  <Bar
+                    dataKey="sessions"
+                    name="Sessions"
+                    fill="var(--orange)"
+                    radius={[12, 12, 0, 0]}
+                  />
                 </BarChart>
               </ResponsiveContainer>
-            )}
-          </CardContent>
-        </Card>
+            </div>
+          )}
+        </ChartCard>
 
-        <Card className="border-border bg-card">
-          <CardHeader>
-            <CardTitle>Achievements</CardTitle>
-            <CardDescription>Milestones earned from your practice history</CardDescription>
-          </CardHeader>
-          <CardContent>
+        <Card variant="tight">
+          <Stack gap={3}>
+            <Stack gap={1}>
+              <Heading level={3}>Achievements</Heading>
+              <Text size="sm" muted>
+                Milestones earned from your practice history.
+              </Text>
+            </Stack>
             {stats.achievements.length === 0 ? (
-              <p className="text-muted-foreground flex min-h-40 items-center justify-center text-center text-sm">
-                No achievements earned yet. Keep practicing to reach a milestone.
-              </p>
+              <EmptyChartState>
+                Keep practicing to reach your first milestone.
+              </EmptyChartState>
             ) : (
-              <div className="space-y-3">
+              <Stack gap={2}>
                 {stats.achievements.map((achievement) => (
-                  <div
-                    key={achievement.id}
-                    className="bg-primary/10 border-primary/20 flex items-center gap-3 border p-3"
-                  >
-                    <AchievementIcon id={achievement.id} />
-                    <div>
-                      <p className="text-foreground text-sm font-semibold">
-                        {achievement.name}
-                      </p>
-                      <p className="text-muted-foreground text-xs">
-                        {achievement.description}
-                      </p>
-                    </div>
-                  </div>
+                  <RowCard key={achievement.id}>
+                    <Row gap={3} align="top" wrap={false}>
+                      <AchievementIcon id={achievement.id} />
+                      <Stack gap={1}>
+                        <Text>{achievement.name}</Text>
+                        <Text size="sm" muted>{achievement.description}</Text>
+                      </Stack>
+                      <Badge tone="mint">Earned</Badge>
+                    </Row>
+                  </RowCard>
                 ))}
-              </div>
+              </Stack>
             )}
-          </CardContent>
+          </Stack>
         </Card>
-      </div>
-    </div>
+      </Grid>
+    </Stack>
   );
 }
 
-function SummaryCard({
+function ChartCard({
   title,
-  value,
-  detail,
+  description,
+  children,
 }: {
   title: string;
-  value: string;
-  detail?: string;
+  description: string;
+  children: React.ReactNode;
 }) {
   return (
-    <Card className="border-border bg-card">
-      <CardHeader className="pb-3">
-        <CardTitle className="text-muted-foreground text-sm font-medium">
-          {title}
-        </CardTitle>
-      </CardHeader>
-      <CardContent>
-        <div className="text-foreground text-3xl font-bold">{value}</div>
-        {detail ? (
-          <p className="text-muted-foreground mt-1 text-xs">{detail}</p>
-        ) : null}
-      </CardContent>
+    <Card variant="tight">
+      <Stack gap={3}>
+        <Stack gap={1}>
+          <Heading level={3}>{title}</Heading>
+          <Text size="sm" muted>{description}</Text>
+        </Stack>
+        {children}
+      </Stack>
     </Card>
   );
 }
 
 function EmptyChartState({ children }: { children: React.ReactNode }) {
   return (
-    <p className="text-muted-foreground flex h-[260px] items-center justify-center text-center text-sm">
-      {children}
-    </p>
+    <div className="flex min-h-[220px] items-center justify-center rounded-control bg-bg px-(--s4) text-center cushion-field">
+      <Text size="sm" muted>{children}</Text>
+    </div>
   );
 }
 
 function AchievementIcon({ id }: { id: string }) {
-  if (id === "perfect-score") return <Trophy className="text-primary size-5" />;
-  if (id === "speed-demon") return <Zap className="text-primary size-5" />;
-  return <Flame className="text-primary size-5" />;
+  if (id === "perfect-score") return <Blob icon="trophy" tone="yellow" size="sm" />;
+  if (id === "speed-demon") return <Blob icon="live" tone="blue" size="sm" />;
+  return <Blob icon="flame" tone="orange" size="sm" />;
 }

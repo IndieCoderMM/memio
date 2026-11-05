@@ -1,5 +1,10 @@
-import { LucideIcon, XIcon } from "lucide-react";
-import { Button } from "../ui/button";
+import { IconButton } from "@/components/pouf/Button";
+import { Blob } from "@/components/pouf/media";
+import { Row, Stack } from "@/components/pouf/layout";
+import { Card, RowCard } from "@/components/pouf/surface";
+import { Heading, Text } from "@/components/pouf/text";
+import type { LucideIcon } from "lucide-react";
+import { XIcon } from "lucide-react";
 
 const ResultCard = ({
   title,
@@ -11,38 +16,36 @@ const ResultCard = ({
   onClose: () => void;
 }) => {
   return (
-    <div className="border-border bg-muted flex flex-col justify-between border">
-      <div className="text-foreground mb-1 flex w-full items-center justify-between px-2 py-2 font-semibold">
-        <h2 className="text-md">
-          <span>{title}</span>
-        </h2>
-        <Button
-          onClick={onClose}
-          aria-label="Refresh history"
-          title="Refresh history"
-          size="icon-sm"
-          variant="destructive"
-        >
-          <XIcon className="inline h-5 w-5" />
-        </Button>
-      </div>
-      <div className="flex max-h-[300px] min-h-[250px] flex-col justify-around gap-2 overflow-y-auto p-4 pb-8">
-        {stats.map((stat, index) => (
-          <div
-            key={index}
-            className="text-muted-foreground/80 flex w-full items-center justify-between"
-          >
-            <div className="flex size-8 items-center justify-center border">
-              <stat.icon className="h-6 w-6" />
-            </div>
-            <div className="p-2">
-              <span className="text-lg">{stat.title}</span>
-            </div>
-            <span className="ml-auto text-xl font-semibold">{stat.value}</span>
-          </div>
-        ))}
-      </div>
-    </div>
+    <Card variant="tight">
+      <Stack gap={3}>
+        <Row justify="between">
+          <Heading level={3}>{title}</Heading>
+          <IconButton
+            icon={<XIcon size={18} />}
+            label="Close result"
+            onClick={onClose}
+            variant="quiet"
+          />
+        </Row>
+        <Stack gap={2}>
+          {stats.map((stat) => (
+            <RowCard key={stat.title}>
+              <Row justify="between" wrap={false}>
+                <Row gap={2} wrap={false}>
+                  <Blob
+                    icon={<stat.icon size={16} />}
+                    tone="blue"
+                    size="sm"
+                  />
+                  <Text size="sm" muted>{stat.title}</Text>
+                </Row>
+                <Text num>{stat.value}</Text>
+              </Row>
+            </RowCard>
+          ))}
+        </Stack>
+      </Stack>
+    </Card>
   );
 };
 

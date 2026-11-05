@@ -1,5 +1,4 @@
 import { formatClock } from "@/utils/formaters";
-import { cn } from "@/utils/tailwind";
 import { createScope, createTimer, Scope, Timer } from "animejs";
 import { PauseIcon, PlayIcon, PowerIcon } from "lucide-react";
 import {
@@ -9,7 +8,7 @@ import {
   useRef,
   useState,
 } from "react";
-import { Button } from "../ui/button";
+import { Button } from "@/components/pouf/Button";
 
 export type TimerClockRef = {
   getDuration: () => number;
@@ -67,41 +66,47 @@ const TimerClock = forwardRef<TimerClockRef>((_, ref) => {
   }, []);
 
   return (
-    <div className="flex w-full max-w-sm flex-col items-center justify-center rounded-md">
+    <div className="w-full max-w-sm">
       <div
         ref={root}
-        className="relative flex w-full items-center justify-center overflow-hidden rounded-sm border border-[#333] px-3 py-1"
+        className="flex min-h-20 w-full items-center justify-center rounded-control bg-yellow px-(--s4) py-(--s3) text-[32px] font-black tracking-[1px] text-ink cushion-control"
       >
-        <div className="bg-accent-yellow/40 shadow-accent-yellow absolute inset-0 shadow-inner brightness-50"></div>
-        <span
-          className={cn(
-            "text-accent-yellow text-center text-3xl brightness-125",
-          )}
-        >
-          {formatClock(duration, true)}
-        </span>
+        {formatClock(duration, true)}
       </div>
-      <div className="mt-4 flex w-full flex-col items-center justify-center gap-2">
+      <div className="mt-(--s3) flex w-full flex-col gap-(--s2)">
         <Button
           onClick={handlePlayPause}
-          aria-label={status === "paused" ? "Start Clock" : "Pause Clock"}
-          title={status === "paused" ? "Start Clock" : "Pause Clock"}
-          className="w-full"
+          aria-label={
+            status === "running"
+              ? "Pause clock"
+              : status === "paused"
+                ? "Resume clock"
+                : "Start clock"
+          }
+          title={
+            status === "running"
+              ? "Pause clock"
+              : status === "paused"
+                ? "Resume clock"
+                : "Start clock"
+          }
+          block
+          tone="purple"
         >
           {status === "paused" ? (
             <>
               <PlayIcon className="h-5 w-5" />
-              <span className="inline-block w-[50%]">Resume Timer</span>
+              <span>Resume timer</span>
             </>
           ) : status === "running" ? (
             <>
               <PauseIcon className="h-5 w-5" />
-              <span className="inline-block w-[50%]">Pause Timer</span>
+              <span>Pause timer</span>
             </>
           ) : (
             <>
               <PlayIcon className="h-5 w-5" />
-              <span className="inline-block w-[50%]">Start Timer</span>
+              <span>Start timer</span>
             </>
           )}
         </Button>
@@ -109,11 +114,11 @@ const TimerClock = forwardRef<TimerClockRef>((_, ref) => {
           onClick={handleReset}
           aria-label="Reset"
           title="Reset Clock"
-          className="w-full"
-          variant="destructive"
+          block
+          tone="pink"
         >
           <PowerIcon className="h-5 w-5" />
-          <span className="inline-block w-[50%]">Reset Timer</span>
+          <span>Reset timer</span>
         </Button>
       </div>
     </div>

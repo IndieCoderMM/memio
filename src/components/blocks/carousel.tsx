@@ -1,6 +1,8 @@
 "use client";
 import { animate, createScope, utils } from "animejs";
 import { ChevronLeft, ChevronRight } from "lucide-react";
+import { IconButton } from "@/components/pouf/Button";
+import { Badge } from "@/components/pouf/media";
 import Image, { StaticImageData } from "next/image";
 import { useEffect, useRef, useState } from "react";
 
@@ -69,22 +71,22 @@ export default function Carousel({ images }: Props) {
   }, []);
 
   return (
-    <div className="relative mx-auto flex w-full max-w-lg items-center justify-center">
+    <div className="relative mx-auto flex w-full max-w-lg flex-col items-center justify-center pb-(--s6)">
       {/* Image Stack */}
       <div
-        className="relative h-80 w-full overflow-hidden rounded-xl"
+        className="relative h-80 w-full overflow-hidden rounded-card bg-bg cushion-field"
         ref={containerRef}
       >
         {images.map((src, i) => {
           return (
             <div
               key={i}
-              className={`carousel-item absolute inset-0 flex justify-center transition-all duration-500 ease-in-out`}
+              className="carousel-item absolute inset-0 flex justify-center transition-all duration-500 ease-in-out"
             >
               <Image
                 src={src}
-                alt={`Slide ${i}`}
-                className="pixelated h-full w-auto rounded-xl object-contain"
+                alt={`Card ${i + 1} of ${total}`}
+                className="pixelated h-full w-auto object-contain"
                 width={100}
                 height={300}
               />
@@ -93,26 +95,31 @@ export default function Carousel({ images }: Props) {
         })}
       </div>
       {/* Index Number Indicator */}
-      <div className="bg-card absolute top-full left-1/2 z-10 flex -translate-x-1/2 space-x-2 rounded p-2">
-        <span className="font-mono text-xl">
-          {String(index + 1).padStart(2, "0")} /{" "}
-          {String(total).padStart(2, "0")}
-        </span>
+      <div className="absolute bottom-0 left-1/2 z-10 -translate-x-1/2">
+        <Badge tone="purple">
+          {String(index + 1).padStart(2, "0")} / {String(total).padStart(2, "0")}
+        </Badge>
       </div>
 
       {/* Nav Buttons */}
-      <button
-        onClick={prev}
-        className="bg-muted hover:bg-accent-green/20 absolute top-1/2 left-0 z-50 -translate-y-1/2 cursor-pointer rounded-full p-2"
-      >
-        <ChevronLeft size={24} />
-      </button>
-      <button
-        onClick={next}
-        className="bg-muted hover:bg-accent-green/20 absolute top-1/2 right-0 z-50 -translate-y-1/2 cursor-pointer rounded-full p-2"
-      >
-        <ChevronRight size={24} />
-      </button>
+      <div className="absolute top-1/2 left-(--s2) z-50 -translate-y-1/2">
+        <IconButton
+          onClick={prev}
+          icon={<ChevronLeft size={20} />}
+          label="Previous card"
+          tone="purple"
+          size="sm"
+        />
+      </div>
+      <div className="absolute top-1/2 right-(--s2) z-50 -translate-y-1/2">
+        <IconButton
+          onClick={next}
+          icon={<ChevronRight size={20} />}
+          label="Next card"
+          tone="purple"
+          size="sm"
+        />
+      </div>
     </div>
   );
 }

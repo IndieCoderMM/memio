@@ -1,26 +1,31 @@
+import { Badge, Blob } from "@/components/pouf/media";
+import { Row, Stack } from "@/components/pouf/layout";
+import { Card } from "@/components/pouf/surface";
+import { Eyebrow, Heading, Text } from "@/components/pouf/text";
+
 const ComingSoon = () => {
   return (
-    <div className="flex min-h-[80vh] flex-col items-center justify-center">
-      <h1 className="font-title mb-4 text-4xl font-bold tracking-tight sm:text-5xl">
-        🧪 Under Development
-      </h1>
-      <p className="mb-8 max-w-md text-center text-lg text-gray-400 sm:text-xl">
-        Researchers are engineering the most dangerously effective memory
-        training system ever built
-      </p>
-
-      <div className="relative h-6 w-64 overflow-hidden rounded-full bg-gray-700">
-        <div className="absolute inset-0 w-1/2 animate-pulse rounded-full bg-gradient-to-r from-green-400 to-green-600" />
-      </div>
-
-      <p className="mt-4 text-sm text-gray-500 italic">
-        Hang tight! Memory upgrades arriving soon...
-      </p>
-
-      <footer className="mt-12 text-xs text-gray-600">
-        &copy; {new Date().getFullYear()} Memio Labs
-      </footer>
-    </div>
+    <main className="mx-auto flex min-h-[70vh] max-w-[760px] items-center px-(--s5) py-(--s8)">
+      <Card>
+        <Stack gap={4}>
+          <Blob icon="lab" tone="mint" size="md" />
+          <Stack gap={2}>
+            <Eyebrow>In the works</Eyebrow>
+            <Heading level={1}>Under development</Heading>
+            <Text muted>
+              We’re building more ways to train memory. Check back soon for the
+              next part of Memio.
+            </Text>
+          </Stack>
+          <Row>
+            <Badge tone="mint">In progress</Badge>
+          </Row>
+          <Text size="sm" muted>
+            © {new Date().getFullYear()} Memio Labs
+          </Text>
+        </Stack>
+      </Card>
+    </main>
   );
 };
 

@@ -24,23 +24,23 @@ const faceCards = Object.entries(cardImages).filter((k, v) => {
 
 const DeckBuilder = () => {
   return (
-    <div className="flex h-[400px] flex-row gap-2">
-      <div className="flex w-full flex-col items-center gap-2 overflow-y-scroll">
+    <div className="grid h-[400px] grid-cols-4 gap-(--s2) rounded-control bg-bg p-(--s2) cushion-field">
+      <div className="flex min-w-0 flex-col items-center gap-(--s2) overflow-y-auto">
         {cards.slice(0, 13).map(([id, src], index) => (
           <DraggableImage id={id} key={index} src={src} />
         ))}
       </div>
-      <div className="flex w-full flex-col items-center gap-2 overflow-y-scroll">
+      <div className="flex min-w-0 flex-col items-center gap-(--s2) overflow-y-auto">
         {cards.slice(13, 26).map(([id, src], index) => (
           <DraggableImage key={index} id={id} src={src} />
         ))}
       </div>
-      <div className="flex w-full flex-col items-center gap-2 overflow-y-scroll">
+      <div className="flex min-w-0 flex-col items-center gap-(--s2) overflow-y-auto">
         {cards.slice(26, 39).map(([id, src], index) => (
           <DraggableImage key={index} id={id} src={src} />
         ))}
       </div>
-      <div className="flex w-full flex-col items-center gap-2 overflow-y-scroll">
+      <div className="flex min-w-0 flex-col items-center gap-(--s2) overflow-y-auto">
         {cards.slice(39, 52).map(([id, src], index) => (
           <DraggableImage id={id} key={index} src={src} />
         ))}
@@ -62,7 +62,7 @@ const DraggableImage = ({ id, src }: { id: string; src: StaticImageData }) => {
       onDragStart={(e) => {
         e.dataTransfer.setData("text/plain", id);
       }}
-      className="pixelated deck-item aspect-square h-auto w-full object-contain p-1"
+      className="pixelated deck-item aspect-[5/7] h-auto w-full rounded-[10px] bg-surface object-contain p-1 cushion-field"
     />
   );
 };

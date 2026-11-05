@@ -1,17 +1,15 @@
+import { GamePage } from "@/components/layouts/game-page";
 import NumberBoard from "@/features/binary/ui/number-board";
 import NumberControls from "@/features/binary/ui/number-controls";
 
-const BinaryPage = () => {
+export default function BinaryPage() {
   return (
-    <div className="grid lg:grid-cols-2">
-      <div className="col-span-1 flex flex-col items-center p-4">
-        <NumberBoard />
-      </div>
-      <div className="col-span-1 flex flex-col items-center p-4">
-        <NumberControls />
-      </div>
-    </div>
+    <GamePage
+      title="Binary"
+      description="Study a stream of zeroes and ones, then recall the pattern."
+      tone="purple"
+      board={<NumberBoard />}
+      controls={<NumberControls />}
+    />
   );
-};
-
-export default BinaryPage;
+}

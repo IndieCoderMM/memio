@@ -4,7 +4,6 @@ import ControlPanelLayout from "@/components/layouts/control-panel";
 import { Button } from "@/components/ui/button";
 import TimerClock, { TimerClockRef } from "@/components/widgets/timer-clock";
 import { saveRecord } from "@/features/core/utils/record-storage";
-import { cn } from "@/utils/tailwind";
 import { FlameIcon, SearchCheckIcon, ThumbsDownIcon } from "lucide-react";
 import { useRef } from "react";
 import { toast } from "react-toastify";
@@ -107,46 +106,36 @@ const CardControls = () => {
 
   return (
     <ControlPanelLayout renderStatus={() => <Status />}>
-      <div className="flex flex-1 flex-col gap-2">
-        <div className="grid w-full grid-cols-5">
-          {mode !== "edit" ? (
-            <div className="col-span-2 flex flex-col gap-2 p-2">
+      <div className="grid flex-1 grid-cols-1 gap-(--s4) xl:grid-cols-[minmax(0,0.85fr)_minmax(0,1.15fr)]">
+        <div className="flex min-w-0 flex-col gap-(--s3)">
+          {mode === "edit" ? (
+            <DeckBuilder />
+          ) : (
+            <>
               <TimerClock key="Scan timer" ref={scanRef} />
               <CardRandomizer />
-            </div>
-          ) : (
-            <div
-              className={cn("col-span-2 flex flex-col gap-2 p-2", {
-                "col-span-3": mode === "edit",
-              })}
-            >
-              <DeckBuilder />
-            </div>
+            </>
           )}
-          <div
-            className={cn("col-span-3 p-2", {
-              "col-span-2": mode === "edit",
-            })}
-          >
-            {mode === "check" ? (
-              <DeckCheckResult />
-            ) : mode === "view" ? (
-              <DeckHistory />
-            ) : (
-              <TimerClock key="Recall timer" ref={recallRef} />
-            )}
-          </div>
+        </div>
+        <div className="min-w-0">
+          {mode === "check" ? (
+            <DeckCheckResult />
+          ) : mode === "view" ? (
+            <DeckHistory />
+          ) : (
+            <TimerClock key="Recall timer" ref={recallRef} />
+          )}
         </div>
       </div>
-      <div className="mt-auto flex w-full justify-end gap-4 p-4">
+      <div className="mt-auto flex w-full flex-wrap justify-end gap-(--s2) pt-(--s4)">
         {mode !== "edit" ? (
-          <Button size="lg" onClick={onRecall} className="min-w-[250px]">
+          <Button size="lg" onClick={onRecall} className="min-w-[150px] flex-1">
             <FlameIcon className="h-6! w-6!" />
             Recall
           </Button>
         ) : (
           <>
-            <Button onClick={onReset} variant="secondary">
+            <Button onClick={onReset} variant="destructive">
               <ThumbsDownIcon className="h-6 w-6" />
               Give Up
             </Button>

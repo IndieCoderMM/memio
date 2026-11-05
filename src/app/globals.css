@@ -1,4 +1,5 @@
 @import "@fontsource-variable/nunito";
+@import "react-toastify/dist/ReactToastify.css";
 @import "../components/pouf/pouf.css";
 
 @custom-variant dark (&:is(.dark *));
@@ -95,4 +96,21 @@ input[type="number"] {
 
 .pixelated {
   image-rendering: pixelated;
+}
+
+.pouf-toast {
+  background: var(--surface) !important;
+  color: var(--ink) !important;
+  border-radius: var(--r-control) !important;
+  box-shadow: var(--pouf-card) !important;
+  font-family: var(--font-pouf) !important;
+  font-weight: 800;
+}
+
+.pouf-toast .Toastify__close-button {
+  color: var(--ink);
+}
+
+.pouf-toast .Toastify__progress-bar {
+  background: var(--purple);
 }
