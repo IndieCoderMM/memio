@@ -1,6 +1,7 @@
 "use client";
 
 import HistoryList from "@/components/blocks/history-list";
+import { useCloseGameDialog } from "@/components/layouts/game-dialog";
 import { useCallback, useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import { useChessStore } from "../hooks/use-chess-store";
@@ -16,6 +17,7 @@ const BoardHistory = () => {
   const setMode = useChessStore((state) => state.setMode);
   const setBoardKey = useChessStore((state) => state.setBoardKey);
   const setErrorSquares = useChessStore((state) => state.setErrorSquares);
+  const closeHistory = useCloseGameDialog();
 
   const refreshBoards = useCallback(async () => {
     setRefreshing(true);
@@ -41,6 +43,7 @@ const BoardHistory = () => {
     setActivePiece(null);
     setErrorSquares([]);
     setBoardKey(key);
+    closeHistory();
   };
 
   const handleDelete = async (key: string) => {

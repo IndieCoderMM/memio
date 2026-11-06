@@ -4,7 +4,7 @@ import StatsDashboard from "@/features/stats/ui/stats-dashboard";
 
 export default function Stats() {
   return (
-    <main className="mx-auto max-w-[1280px] px-(--s8) py-(--s8) max-[900px]:px-(--s4) max-[620px]:py-(--s5)">
+    <main className="page-container">
       <Stack gap={6}>
         <header>
           <Stack gap={2}>

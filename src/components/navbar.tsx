@@ -1,6 +1,7 @@
 "use client";
 
 import { IconButton } from "@/components/pouf/Button";
+import { Blob } from "@/components/pouf/media";
 import { Navbar as PoufNavbar } from "@/components/pouf/navbar";
 import { useAppStore } from "@/lib/app-store";
 import {
@@ -30,11 +31,13 @@ export default function Navbar() {
 
   return (
     <PoufNavbar
+      link={Link}
       brand={
         <Link
           href="/"
-          className="text-ink flex items-center gap-(--s2) no-underline"
+          className="flex shrink-0 items-center gap-(--s2) font-black text-ink no-underline"
         >
+          <Blob icon="target" tone="purple" size="sm" />
           <span>Memio</span>
         </Link>
       }

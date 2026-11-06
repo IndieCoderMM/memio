@@ -1,15 +1,18 @@
 import type { ReactNode } from "react";
-import { Blob } from "@/components/pouf/media";
 import { Grid, Row, Stack } from "@/components/pouf/layout";
 import { Card } from "@/components/pouf/surface";
 import { Eyebrow, Heading, Text } from "@/components/pouf/text";
+import { GameDialog } from "@/components/layouts/game-dialog";
+import { HistoryIcon } from "lucide-react";
 
 interface GamePageProps {
   title: string;
   description: string;
   board: ReactNode;
   controls: ReactNode;
-  tone: "purple" | "blue" | "mint" | "orange";
+  mode: ReactNode;
+  history: ReactNode;
+  result: ReactNode;
 }
 
 export function GamePage({
@@ -17,10 +20,12 @@ export function GamePage({
   description,
   board,
   controls,
-  tone,
+  mode,
+  history,
+  result,
 }: GamePageProps) {
   return (
-    <main className="mx-auto max-w-[1440px] px-(--s8) py-(--s7) max-[900px]:px-(--s4) max-[900px]:py-(--s5)">
+    <main className="page-container">
       <Stack gap={5}>
         <header>
           <Stack gap={2}>
@@ -35,8 +40,17 @@ export function GamePage({
             <Card variant="tight">
               <Stack gap={3}>
                 <Row justify="between">
-                  <Heading level={3}>Practice board</Heading>
-                  <Blob icon="target" tone={tone} size="sm" />
+                  {mode}
+                  <Row gap={1} wrap={false}>
+                    <GameDialog
+                      icon={<HistoryIcon size={18} />}
+                      label="Open saved history"
+                      title="Saved history"
+                    >
+                      {history}
+                    </GameDialog>
+                    {result}
+                  </Row>
                 </Row>
                 {board}
               </Stack>

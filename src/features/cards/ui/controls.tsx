@@ -11,10 +11,7 @@ import { useCardStore } from "../hooks/use-card-store";
 import { diffDecks } from "../utils/diff-decks";
 import { saveDeck } from "../utils/storage";
 import DeckBuilder from "./deck-builder";
-import DeckHistory from "./history";
 import CardRandomizer from "./randomizer";
-import DeckCheckResult from "./result";
-import Status from "./status";
 
 const CardControls = () => {
   const mode = useCardStore((s) => s.mode);
@@ -105,9 +102,15 @@ const CardControls = () => {
   };
 
   return (
-    <ControlPanelLayout renderStatus={() => <Status />}>
-      <div className="grid flex-1 grid-cols-1 gap-(--s4) xl:grid-cols-[minmax(0,0.85fr)_minmax(0,1.15fr)]">
-        <div className="flex min-w-0 flex-col gap-(--s3)">
+    <ControlPanelLayout>
+      <div
+        className={
+          mode === "edit"
+            ? "grid flex-1 grid-cols-1 gap-(--s4) xl:grid-cols-[minmax(0,0.85fr)_minmax(0,1.15fr)]"
+            : "flex flex-1 flex-col gap-(--s4)"
+        }
+      >
+        <div className="flex w-full min-w-0 flex-col gap-(--s3)">
           {mode === "edit" ? (
             <DeckBuilder />
           ) : (
@@ -117,15 +120,11 @@ const CardControls = () => {
             </>
           )}
         </div>
-        <div className="min-w-0">
-          {mode === "check" ? (
-            <DeckCheckResult />
-          ) : mode === "view" ? (
-            <DeckHistory />
-          ) : (
+        {mode === "edit" && (
+          <div className="w-full min-w-0">
             <TimerClock key="Recall timer" ref={recallRef} />
-          )}
-        </div>
+          </div>
+        )}
       </div>
       <div className="mt-auto flex w-full flex-wrap justify-end gap-(--s2) pt-(--s4)">
         {mode !== "edit" ? (

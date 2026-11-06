@@ -1,4 +1,5 @@
 import type { ReactNode } from 'react'
+import type { LinkComponent } from './NavLink'
 
 export interface FooterColumn {
   title: string
@@ -11,13 +12,17 @@ interface FooterProps {
   /** A short line under the brand. */
   tagline?: string
   columns?: FooterColumn[]
+  /** Swap in the host app's router link for internal destinations. */
+  link?: LinkComponent
   /** The bottom line — copyright, credits. */
   note?: ReactNode
 }
 
+const Anchor: LinkComponent = (props) => <a {...props} />
+
 /** A site footer on one big cushion: brand block plus columns of links, with an
  * optional bottom note. */
-export function Footer({ brand, tagline, columns = [], note }: FooterProps) {
+export function Footer({ brand, tagline, columns = [], link: Link = Anchor, note }: FooterProps) {
   return (
     <footer className="pouf-footer bg-surface rounded-card cushion-card px-(--s7) pt-(--s7) pb-(--s6)">
       <div className="flex flex-wrap gap-(--s7) justify-between">
@@ -35,13 +40,13 @@ export function Footer({ brand, tagline, columns = [], note }: FooterProps) {
                 * "inline" exemption does not cover them. `self-start` keeps each
                 * link hugging its label rather than stretching the column. */}
               {col.links.map((l) => (
-                <a
+                <Link
                   key={`${l.href}-${l.label}`}
                   href={l.href}
                   className="font-extrabold text-ink no-underline hover:text-muted transition-colors inline-flex items-center self-start min-h-[24px]"
                 >
                   {l.label}
-                </a>
+                </Link>
               ))}
             </nav>
           ))}

@@ -1,3 +1,4 @@
+import { Button } from "@/components/pouf/Button";
 import { formatClock } from "@/utils/formaters";
 import { createScope, createTimer, Scope, Timer } from "animejs";
 import { PauseIcon, PlayIcon, PowerIcon } from "lucide-react";
@@ -8,7 +9,6 @@ import {
   useRef,
   useState,
 } from "react";
-import { Button } from "@/components/pouf/Button";
 
 export type TimerClockRef = {
   getDuration: () => number;
@@ -66,10 +66,10 @@ const TimerClock = forwardRef<TimerClockRef>((_, ref) => {
   }, []);
 
   return (
-    <div className="w-full max-w-sm">
+    <div className="w-full max-w-md">
       <div
         ref={root}
-        className="flex min-h-20 w-full items-center justify-center rounded-control bg-yellow px-(--s4) py-(--s3) text-[32px] font-black tracking-[1px] text-ink cushion-control"
+        className="rounded-control bg-yellow cushion-control flex min-h-20 w-full items-center justify-center px-(--s4) py-(--s3) text-[32px] font-black tracking-[1px] text-(--on-accent)"
       >
         {formatClock(duration, true)}
       </div>

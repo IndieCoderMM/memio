@@ -1,6 +1,7 @@
 import clsx from "clsx";
 import { LucideIcon, MenuIcon } from "lucide-react";
 import type { ReactNode } from "react";
+import type { LinkComponent } from "./NavLink";
 
 export interface NavbarLink {
   label: string;
@@ -15,9 +16,13 @@ interface NavbarProps {
   links?: NavbarLink[];
   /** Right-side actions — usually a Button or two. */
   actions?: ReactNode;
+  /** Swap in the host app's router link to avoid full-page navigation. */
+  link?: LinkComponent;
   /** Identifies this navigation landmark when a page has more than one. */
   label?: string;
 }
+
+const Anchor: LinkComponent = (props) => <a {...props} />;
 
 /** A top navigation bar on a floating cushion. Brand on the left, links, and
  * right-aligned actions. On narrow screens the links move into a native
@@ -27,16 +32,20 @@ export function Navbar({
   brand,
   links = [],
   actions,
+  link: Link = Anchor,
   label = "Primary",
 }: NavbarProps) {
   return (
     <nav
-      className="pouf-navbar bg-surface cushion-card rounded-card fixed top-2 left-1/2 mx-auto flex h-16 w-2xl -translate-x-1/2 items-center gap-(--s4) p-(--s3) pl-(--s3)"
+      className="pouf-navbar bg-surface cushion-card rounded-card fixed top-2 left-1/2 mx-auto flex h-16 w-[min(42rem,calc(100vw_-_2rem))] -translate-x-1/2 items-center gap-(--s4) px-(--s3) py-(--s2)"
       aria-label={label}
     >
-      <div className="pouf-navbar__links flex items-center justify-center gap-[2px]">
+      <div className="pouf-navbar__brand flex min-w-0 shrink-0 items-center">
+        {brand}
+      </div>
+      <div className="pouf-navbar__links flex flex-1 items-center justify-center gap-[2px]">
         {links.map((l) => (
-          <a
+          <Link
             key={l.href}
             href={l.href}
             aria-current={l.active ? "page" : undefined}
@@ -56,7 +65,7 @@ export function Navbar({
           >
             {l.icon && <l.icon size={16} className="mr-1" />}
             {l.label}
-          </a>
+          </Link>
         ))}
       </div>
       {links.length > 0 ? (
@@ -68,9 +77,16 @@ export function Navbar({
             <span className="sr-only">Menus</span>
             <MenuIcon />
           </summary>
-          <div className="bg-surface rounded-control cushion-card absolute top-[calc(100%+12px)] left-0 z-20 flex min-w-[190px] flex-col gap-(--s1) p-(--s2)">
+          <div
+            className="bg-surface rounded-control cushion-card absolute top-[calc(100%+12px)] left-0 z-20 flex min-w-[190px] flex-col gap-(--s1) p-(--s2)"
+            onClick={(event) =>
+              event.currentTarget
+                .closest("details")
+                ?.removeAttribute("open")
+            }
+          >
             {links.map((link) => (
-              <a
+              <Link
                 key={link.href}
                 href={link.href}
                 aria-current={link.active ? "page" : undefined}
@@ -80,14 +96,9 @@ export function Navbar({
                     ? "bg-purple text-[var(--on-accent)]"
                     : "text-ink hover:bg-[rgba(201,168,255,0.25)]",
                 )}
-                onClick={(event) =>
-                  event.currentTarget
-                    .closest("details")
-                    ?.removeAttribute("open")
-                }
               >
                 {link.label}
-              </a>
+              </Link>
             ))}
           </div>
         </details>

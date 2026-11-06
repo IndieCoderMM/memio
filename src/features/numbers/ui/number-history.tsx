@@ -1,4 +1,7 @@
+"use client";
+
 import HistoryList from "@/components/blocks/history-list";
+import { useCloseGameDialog } from "@/components/layouts/game-dialog";
 import { useCallback, useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import { useNumberStore } from "../hooks/use-number-store";
@@ -9,7 +12,9 @@ const NumberHistory = () => {
   const [refreshing, setRefreshing] = useState(true);
   const activeKey = useNumberStore((s) => s.activeKey);
   const setGenerated = useNumberStore((s) => s.setGeneratedNumbers);
+  const setMode = useNumberStore((s) => s.setMode);
   const setActiveKey = useNumberStore((s) => s.setActiveKey);
+  const closeHistory = useCloseGameDialog();
 
   const refreshNums = useCallback(async () => {
     setRefreshing(true);
@@ -31,7 +36,9 @@ const NumberHistory = () => {
     if (!loadedNum) return;
 
     setGenerated(loadedNum.split(""));
+    setMode("view");
     setActiveKey(key);
+    closeHistory();
   };
 
   const handleDelete = async (key: string) => {

@@ -1,4 +1,7 @@
+"use client";
+
 import HistoryList from "@/components/blocks/history-list";
+import { useCloseGameDialog } from "@/components/layouts/game-dialog";
 import { useCallback, useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import { useCardStore } from "../hooks/use-card-store";
@@ -10,7 +13,9 @@ const DeckHistory = () => {
   const [refreshing, setRefreshing] = useState(true);
   const activeKey = useCardStore((s) => s.activeKey);
   const setGenerated = useCardStore((s) => s.setGeneratedCards);
+  const setMode = useCardStore((s) => s.setMode);
   const setActiveKey = useCardStore((s) => s.setActiveKey);
+  const closeHistory = useCloseGameDialog();
 
   const refreshDecks = useCallback(async () => {
     setRefreshing(true);
@@ -32,7 +37,9 @@ const DeckHistory = () => {
     if (!loadedDeck) return;
 
     setGenerated(loadedDeck);
+    setMode("view");
     setActiveKey(key);
+    closeHistory();
   };
 
   const handleDelete = async (key: string) => {

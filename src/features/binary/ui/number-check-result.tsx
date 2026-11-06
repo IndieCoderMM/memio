@@ -1,9 +1,18 @@
+"use client";
+
+import { GameDialog } from "@/components/layouts/game-dialog";
 import ResultCard from "@/components/blocks/result-card";
 import { formatClock } from "@/utils/formaters";
-import { LayoutGridIcon, LocateFixedIcon, TimerIcon } from "lucide-react";
+import {
+  LayoutGridIcon,
+  LocateFixedIcon,
+  SearchCheckIcon,
+  TimerIcon,
+} from "lucide-react";
 import { useNumberStore } from "../hooks/use-number-store";
 
 const CheckResult = () => {
+  const mode = useNumberStore((state) => state.mode);
   const errorSquares = useNumberStore((state) => state.errorSquares);
   const generated = useNumberStore((state) => state.generated);
   const scanDuration = useNumberStore((state) => state.scanDuration);
@@ -39,14 +48,22 @@ const CheckResult = () => {
     },
   ];
 
+  if (mode !== "check") return null;
+
   return (
-    <ResultCard
-      title="Check Result"
-      stats={stats}
-      onClose={() => {
-        reset();
-      }}
-    />
+    <GameDialog
+      icon={<SearchCheckIcon size={18} />}
+      label="Open check results"
+      title="Check result"
+    >
+      <ResultCard
+        title="Check Result"
+        stats={stats}
+        onClose={() => {
+          reset();
+        }}
+      />
+    </GameDialog>
   );
 };
 

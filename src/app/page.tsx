@@ -59,9 +59,9 @@ const sampleSequence = [
 
 export default function HomePage() {
   return (
-    <main className="mx-auto mt-(--s10) max-w-[1120px] px-(--s5) pb-(--s8) max-[620px]:px-(--s3)">
+    <main className="page-container">
       <Stack gap={10}>
-        <section aria-label="Introduction" className="pt-(--s10)">
+        <section aria-label="Introduction">
           <Grid cols="sidebar" gap={6}>
             <Stack gap={4}>
               <Eyebrow>Memory practice, made playful</Eyebrow>
@@ -111,6 +111,7 @@ export default function HomePage() {
         <HomeProgress />
 
         <Footer
+          link={Link}
           brand={
             <Link href="/" className="text-ink no-underline">
               Memio

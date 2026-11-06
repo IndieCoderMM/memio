@@ -1,8 +1,8 @@
-import { Blob } from "@/components/pouf/media";
+import { Icon } from "@/components/pouf/Icon";
 import { Grid, Row, Stack } from "@/components/pouf/layout";
+import { Blob } from "@/components/pouf/media";
 import { Card } from "@/components/pouf/surface";
 import { Eyebrow, Heading, Text } from "@/components/pouf/text";
-import { Icon } from "@/components/pouf/Icon";
 import techniques from "@/data/wiki.json";
 
 const bestPractices = [
@@ -30,8 +30,8 @@ const bestPractices = [
 
 export default function Wiki() {
   return (
-    <main className="mx-auto max-w-[1120px] px-(--s5) py-(--s8) max-[620px]:px-(--s3)">
-      <Stack gap={7}>
+    <main className="page-container">
+      <Stack gap={10}>
         <header>
           <Stack gap={2}>
             <Eyebrow>Learn and practice</Eyebrow>
@@ -66,7 +66,9 @@ export default function Wiki() {
                         <li key={tip}>
                           <Row gap={2} align="top" wrap={false}>
                             <Icon name="ok" size="sm" />
-                            <Text size="sm" muted>{tip}</Text>
+                            <Text size="sm" muted>
+                              {tip}
+                            </Text>
                           </Row>
                         </li>
                       ))}
@@ -95,7 +97,9 @@ export default function Wiki() {
                     <ul className="m-0 flex list-none flex-col gap-(--s2) p-0">
                       {practice.tips.map((tip) => (
                         <li key={tip}>
-                          <Text size="sm" muted>{tip}</Text>
+                          <Text size="sm" muted>
+                            {tip}
+                          </Text>
                         </li>
                       ))}
                     </ul>

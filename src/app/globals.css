@@ -67,6 +67,28 @@
   }
 }
 
+@layer components {
+  .page-container {
+    box-sizing: border-box;
+    width: 100%;
+    max-width: 1280px;
+    margin-inline: auto;
+    padding: 96px var(--s8) var(--s8);
+  }
+
+  @media (max-width: 900px) {
+    .page-container {
+      padding-inline: var(--s4);
+    }
+  }
+
+  @media (max-width: 620px) {
+    .page-container {
+      padding: 96px var(--s3) var(--s5);
+    }
+  }
+}
+
 .bg-muted {
   background-color: color-mix(in srgb, var(--surface) 65%, var(--bg));
 }

@@ -1,9 +1,18 @@
+"use client";
+
+import { GameDialog } from "@/components/layouts/game-dialog";
 import ResultCard from "@/components/blocks/result-card";
 import { formatClock } from "@/utils/formaters";
-import { LayoutGridIcon, LocateFixedIcon, TimerIcon } from "lucide-react";
+import {
+  LayoutGridIcon,
+  LocateFixedIcon,
+  SearchCheckIcon,
+  TimerIcon,
+} from "lucide-react";
 import { useChessStore } from "../hooks/use-chess-store";
 
 const CheckResult = () => {
+  const mode = useChessStore((state) => state.mode);
   const board = useChessStore((state) => state.board);
   const scanDuration = useChessStore((state) => state.scanDuration);
   const recallDuration = useChessStore((state) => state.recallDuration);
@@ -40,15 +49,23 @@ const CheckResult = () => {
     },
   ];
 
+  if (mode !== "check") return null;
+
   return (
-    <ResultCard
-      title="Check Result"
-      stats={stats}
-      onClose={() => {
-        setMode("view");
-        setErrorSquares([]);
-      }}
-    />
+    <GameDialog
+      icon={<SearchCheckIcon size={18} />}
+      label="Open check results"
+      title="Check result"
+    >
+      <ResultCard
+        title="Check Result"
+        stats={stats}
+        onClose={() => {
+          setMode("view");
+          setErrorSquares([]);
+        }}
+      />
+    </GameDialog>
   );
 };
 

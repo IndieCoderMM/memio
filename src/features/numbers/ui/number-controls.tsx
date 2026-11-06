@@ -10,10 +10,7 @@ import { toast } from "react-toastify";
 import { useNumberStore } from "../hooks/use-number-store";
 import { diffNumbers } from "../utils/diff-numbers";
 import { saveNum } from "../utils/storage";
-import CheckResult from "./number-check-result";
-import NumberHistory from "./number-history";
 import NumberRandomizer from "./number-randomizer";
-import NumberStatus from "./number-status";
 
 const NumberControls = () => {
   const mode = useNumberStore((s) => s.mode);
@@ -104,8 +101,8 @@ const NumberControls = () => {
   };
 
   return (
-    <ControlPanelLayout renderStatus={() => <NumberStatus />}>
-      <div className="grid flex-1 grid-cols-1 gap-(--s4) xl:grid-cols-[minmax(0,0.85fr)_minmax(0,1.15fr)]">
+    <ControlPanelLayout>
+      <div className="flex flex-1 flex-col gap-(--s4)">
         <div className="flex min-w-0 flex-col gap-(--s3)">
           {mode !== "edit" ? (
             <TimerClock key="Scan timer" ref={scanRef} />
@@ -113,17 +110,6 @@ const NumberControls = () => {
             <TimerClock key="Recall timer" ref={recallRef} />
           )}
           {mode !== "edit" && <NumberRandomizer />}
-        </div>
-        <div className="min-w-0">
-          {mode === "check" ? (
-            <CheckResult />
-          ) : mode === "view" ? (
-            <NumberHistory />
-          ) : (
-            <p className="rounded-control bg-bg p-(--s4) text-muted cushion-field">
-              Enter the sequence on the board, then check your recall.
-            </p>
-          )}
         </div>
       </div>
       <div className="mt-auto flex w-full flex-wrap justify-center gap-(--s2) pt-(--s4)">

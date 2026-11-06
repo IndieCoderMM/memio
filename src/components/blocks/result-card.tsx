@@ -3,6 +3,7 @@ import { Blob } from "@/components/pouf/media";
 import { Row, Stack } from "@/components/pouf/layout";
 import { Card, RowCard } from "@/components/pouf/surface";
 import { Heading, Text } from "@/components/pouf/text";
+import { useCloseGameDialog } from "@/components/layouts/game-dialog";
 import type { LucideIcon } from "lucide-react";
 import { XIcon } from "lucide-react";
 
@@ -15,6 +16,12 @@ const ResultCard = ({
   stats: { icon: LucideIcon; title: string; value: number | string }[];
   onClose: () => void;
 }) => {
+  const closeDialog = useCloseGameDialog();
+  const handleClose = () => {
+    onClose();
+    closeDialog();
+  };
+
   return (
     <Card variant="tight">
       <Stack gap={3}>
@@ -23,7 +30,7 @@ const ResultCard = ({
           <IconButton
             icon={<XIcon size={18} />}
             label="Close result"
-            onClick={onClose}
+            onClick={handleClose}
             variant="quiet"
           />
         </Row>

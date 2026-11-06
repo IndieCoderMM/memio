@@ -8,10 +8,7 @@ import { useRef } from "react";
 import { toast } from "react-toastify";
 import { useBoardControls } from "../hooks/use-board-controls";
 import { useChessStore } from "../hooks/use-chess-store";
-import BoardHistory from "./board-history";
 import BoardRandomizer from "./board-randomizer";
-import BoardStatus from "./board-status";
-import CheckResult from "./check-result";
 import EditorBar from "./editor-bar";
 
 const BoardControl = () => {
@@ -40,8 +37,8 @@ const BoardControl = () => {
   };
 
   return (
-    <ControlPanelLayout renderStatus={() => <BoardStatus />}>
-      <div className="grid flex-1 grid-cols-1 gap-(--s4) xl:grid-cols-[minmax(0,0.85fr)_minmax(0,1.15fr)]">
+    <ControlPanelLayout>
+      <div className="flex flex-1 flex-col gap-(--s4)">
         <div className="flex min-w-0 flex-col gap-(--s3)">
           {mode === "edit" ? (
             <>
@@ -53,17 +50,6 @@ const BoardControl = () => {
               <TimerClock key="Scan timer" ref={scanRef} />
               <BoardRandomizer />
             </>
-          )}
-        </div>
-        <div className="min-w-0">
-          {mode === "check" ? (
-            <CheckResult />
-          ) : mode === "view" ? (
-            <BoardHistory />
-          ) : (
-            <p className="rounded-control bg-bg p-(--s4) text-muted cushion-field">
-              Place the remembered pieces on the board, then check your recall.
-            </p>
           )}
         </div>
       </div>

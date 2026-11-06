@@ -1444,6 +1444,7 @@
  * a wide screen; viewport media queries left its actions outside that box. */
 .pouf-navbar {
   container-type: inline-size;
+  z-index: 45;
 }
 .pouf-navbar__mobile {
   display: none;
