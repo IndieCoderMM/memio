@@ -4,6 +4,7 @@ declare type ConfigType = {
   };
   numbers: {
     total: number;
+    source?: "random" | "pi";
   };
   cards: {
     total: number;

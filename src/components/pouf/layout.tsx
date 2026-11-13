@@ -90,7 +90,7 @@ const grid = cva("pouf-grid grid", {
       3: "grid-cols-3 max-[900px]:grid-cols-1",
       4: "grid-cols-4 max-[900px]:grid-cols-1",
       sidebar:
-        "[grid-template-columns:minmax(0,2fr)_minmax(0,1fr)] max-[900px]:[grid-template-columns:minmax(0,1fr)]",
+        "grid-cols-1 min-[901px]:[grid-template-columns:minmax(0,2fr)_minmax(0,1fr)]",
     },
     gap: gapVariant,
   },

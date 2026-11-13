@@ -5,14 +5,17 @@ import { useCloseGameDialog } from "@/components/layouts/game-dialog";
 import { useCallback, useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import { useNumberStore } from "../hooks/use-number-store";
-import { deleteNum, getSavedNums } from "../utils/storage";
+import {
+  deleteNum,
+  getSavedNums,
+  type SavedNumber,
+} from "../utils/storage";
 
 const NumberHistory = () => {
-  const [nums, setNums] = useState<Record<string, string>>({});
+  const [nums, setNums] = useState<Record<string, SavedNumber>>({});
   const [refreshing, setRefreshing] = useState(true);
   const activeKey = useNumberStore((s) => s.activeKey);
   const setGenerated = useNumberStore((s) => s.setGeneratedNumbers);
-  const setMode = useNumberStore((s) => s.setMode);
   const setActiveKey = useNumberStore((s) => s.setActiveKey);
   const closeHistory = useCloseGameDialog();
 
@@ -35,8 +38,7 @@ const NumberHistory = () => {
     const loadedNum = nums[key];
     if (!loadedNum) return;
 
-    setGenerated(loadedNum.split(""));
-    setMode("view");
+    setGenerated(loadedNum.digits.split(""), loadedNum.source);
     setActiveKey(key);
     closeHistory();
   };

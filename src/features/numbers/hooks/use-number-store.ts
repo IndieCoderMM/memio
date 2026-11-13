@@ -1,7 +1,9 @@
 import { create } from "zustand";
+import type { NumberSequenceSource } from "../types";
 
 interface NumberStore {
   digits: number;
+  source: NumberSequenceSource;
   generated: string[] | null; // Generated number
   tried: string[] | null; // User's input number
   mode: "view" | "edit" | "check"; // Mode of the number game
@@ -9,9 +11,13 @@ interface NumberStore {
   scanDuration: number;
   recallDuration: number;
   activeKey: string | null; // Key for saving/loading numbers
-  setGeneratedNumbers: (numbers: string[] | null) => void;
+  setGeneratedNumbers: (
+    numbers: string[] | null,
+    source: NumberSequenceSource,
+  ) => void;
   setErrorSquares: (squares: Record<number, string> | null) => void;
   setDigits: (digits: number) => void;
+  setSource: (source: NumberSequenceSource) => void;
   setScanDuration: (duration: number) => void;
   setRecallDuration: (duration: number) => void;
   setActiveKey: (key: string | null) => void;
@@ -22,6 +28,7 @@ interface NumberStore {
 
 export const useNumberStore = create<NumberStore>((set) => ({
   digits: 10,
+  source: "random",
   generated: null,
   tried: null,
   mode: "view",
@@ -31,8 +38,18 @@ export const useNumberStore = create<NumberStore>((set) => ({
   activeKey: null,
   setActiveKey: (key: string | null) => set({ activeKey: key }),
   setDigits: (digits: number) => set({ digits }),
-  setGeneratedNumbers: (numbers: string[] | null) =>
-    set({ generated: numbers, tried: null, errorSquares: null, mode: "view" }),
+  setSource: (source: NumberSequenceSource) => set({ source }),
+  setGeneratedNumbers: (
+    numbers: string[] | null,
+    source: NumberSequenceSource,
+  ) =>
+    set({
+      generated: numbers,
+      source,
+      tried: null,
+      errorSquares: null,
+      mode: "view",
+    }),
   setTriedNumbers: (numbers: string[] | null) => set({ tried: numbers }),
   setScanDuration: (duration: number) => set({ scanDuration: duration }),
   setRecallDuration: (duration: number) => set({ recallDuration: duration }),

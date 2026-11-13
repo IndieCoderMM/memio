@@ -15,3 +15,11 @@ export function generateRandomNumber(digits: number): string[] {
 
   return num.split("");
 }
+
+const PI_DECIMAL_DIGITS =
+  "14159265358979323846264338327950288419716939937510" +
+  "58209749445923078164062862089986280348253421170679";
+
+export function generatePiDigits(digits: number): string[] {
+  return PI_DECIMAL_DIGITS.slice(0, digits).split("");
+}

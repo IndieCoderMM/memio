@@ -10,6 +10,7 @@ const DigitConfigCard = ({
   value,
   onValueChange,
   onRandomize,
+  actionLabel = "Randomize",
   min = 0,
   max = 100,
 }: {
@@ -17,6 +18,7 @@ const DigitConfigCard = ({
   value: number;
   onValueChange: (value: number) => void;
   onRandomize: () => void;
+  actionLabel?: string;
   min?: number;
   max?: number;
 }) => {
@@ -75,7 +77,7 @@ const DigitConfigCard = ({
         </Row>
         <Button tone="mint" block onClick={onRandomize}>
           <DicesIcon size={18} />
-          Randomize
+          {actionLabel}
         </Button>
       </Stack>
     </Card>

@@ -22,12 +22,12 @@ const Cell = ({
   cbRef,
 }: CellProps) => {
   return (
-    <div className="relative">
+    <div className="relative aspect-square w-full max-w-10">
       {readOnly ? (
         <AnimatedNumber
           isStatic={!animated}
           className={cn(
-            "flex size-10 items-center justify-center rounded-[12px] bg-surface text-center font-mono text-2xl font-bold text-ink cushion-field",
+            "flex size-full items-center justify-center rounded-[8px] bg-surface text-center font-mono text-base font-bold leading-none text-ink cushion-field sm:text-2xl",
             error ? "cushion-field-focus" : "",
             error
               ? "ring-2 ring-pink"
@@ -41,7 +41,7 @@ const Cell = ({
         <input
           ref={cbRef}
           className={cn(
-            "size-10 rounded-[12px] bg-bg text-center font-mono text-2xl font-bold text-ink outline-none cushion-field focus-visible:cushion-field-focus",
+            "size-full rounded-[8px] bg-bg text-center font-mono text-base font-bold leading-none text-ink outline-none cushion-field focus-visible:cushion-field-focus sm:text-2xl",
             error
               ? "ring-2 ring-pink"
               : isCorrect
@@ -71,7 +71,10 @@ const Cell = ({
 };
 
 export const EmptyCell = () => (
-  <span className="size-10 rounded-[12px] bg-bg cushion-field" aria-hidden="true" />
+  <span
+    className="aspect-square w-full max-w-10 rounded-[8px] bg-bg cushion-field"
+    aria-hidden="true"
+  />
 );
 
 export default Cell;

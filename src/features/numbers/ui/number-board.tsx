@@ -44,7 +44,7 @@ const NumberBoard = () => {
     };
 
   return (
-    <div className="mx-auto grid w-fit max-w-full grid-cols-[repeat(5,2.5rem)] place-items-center gap-(--s1) sm:grid-cols-[repeat(8,2.5rem)] xl:grid-cols-[repeat(10,2.5rem)]">
+    <div className="mx-auto grid w-full max-w-[454px] grid-cols-10 place-items-center gap-(--s1)">
       {generated?.map((digit, index) => {
         const num = mode === "edit" ? tried?.[index] : digit;
         return (

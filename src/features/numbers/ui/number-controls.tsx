@@ -15,6 +15,7 @@ import NumberRandomizer from "./number-randomizer";
 const NumberControls = () => {
   const mode = useNumberStore((s) => s.mode);
   const activeKey = useNumberStore((s) => s.activeKey);
+  const source = useNumberStore((s) => s.source);
   const generated = useNumberStore((s) => s.generated);
   const tried = useNumberStore((s) => s.tried);
   const scanRef = useRef<TimerClockRef>(null);
@@ -40,7 +41,7 @@ const NumberControls = () => {
       if (!activeKey) {
         let key: string;
         try {
-          key = await saveNum(generated.join(""));
+          key = await saveNum(generated.join(""), source);
         } catch {
           toast.error("Your numbers could not be saved. Please try again.");
           return;
