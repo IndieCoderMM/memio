@@ -186,7 +186,7 @@ export function LandingBlock() {
                 <Heading level={2}>Start small. Keep your options.</Heading>
                 <Text muted>Every plan includes global deploys, previews, and analytics.</Text>
               </Stack>
-              <Segmented
+              <Segmented<Billing>
                 label="Billing period"
                 value={billing}
                 onChange={setBilling}

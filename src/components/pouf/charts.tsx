@@ -193,7 +193,7 @@ export function LineChart({ data, dataKey, series, height = 300 }: LineChartProp
 /* Pie / Donut Chart                                                   */
 /* ------------------------------------------------------------------ */
 
-interface PieSlice {
+interface PieSlice extends Record<string, unknown> {
   key: string
   label: string
   value: number

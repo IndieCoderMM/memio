@@ -1,5 +1,5 @@
 import clsx from 'clsx'
-import type { ReactElement, ReactNode } from 'react'
+import type { ReactNode } from 'react'
 import { toneClass, type Tone } from './tone'
 import { renderIcon, type IconLike } from './Icon'
 
@@ -8,7 +8,7 @@ export type LinkComponent = (props: {
   className?: string
   'aria-current'?: 'page'
   children: ReactNode
-}) => ReactElement
+}) => ReactNode
 
 const Anchor: LinkComponent = (props) => <a {...props} />
 

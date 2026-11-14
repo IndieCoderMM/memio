@@ -131,7 +131,7 @@ export default function HomePage() {
             {
               title: "Explore",
               links: [
-                { label: "Memory wiki", href: "/wiki" },
+                { label: "Library", href: "/library" },
                 { label: "Your stats", href: "/stats" },
               ],
             },

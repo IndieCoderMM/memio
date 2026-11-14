@@ -6,8 +6,8 @@ import { Navbar as PoufNavbar } from "@/components/pouf/navbar";
 import { useAppStore } from "@/lib/app-store";
 import {
   HomeIcon,
+  LibraryBig,
   Moon,
-  NewspaperIcon,
   PieChartIcon,
   Sun,
   TargetIcon,
@@ -35,7 +35,7 @@ export default function Navbar() {
       brand={
         <Link
           href="/"
-          className="flex shrink-0 items-center gap-(--s2) font-black text-ink no-underline"
+          className="text-ink flex shrink-0 items-center gap-(--s2) font-black no-underline"
         >
           <Blob icon="target" tone="purple" size="sm" />
           <span>Memio</span>
@@ -55,10 +55,10 @@ export default function Navbar() {
           icon: TargetIcon,
         },
         {
-          href: "/wiki",
-          label: "Wiki",
-          active: pathname === "/wiki",
-          icon: NewspaperIcon,
+          href: "/library",
+          label: "Library",
+          active: pathname === "/library" || pathname.startsWith("/library/"),
+          icon: LibraryBig,
         },
         {
           href: "/stats",

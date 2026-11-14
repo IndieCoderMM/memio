@@ -80,9 +80,7 @@ export function Navbar({
           <div
             className="bg-surface rounded-control cushion-card absolute top-[calc(100%+12px)] left-0 z-20 flex min-w-[190px] flex-col gap-(--s1) p-(--s2)"
             onClick={(event) =>
-              event.currentTarget
-                .closest("details")
-                ?.removeAttribute("open")
+              event.currentTarget.closest("details")?.removeAttribute("open")
             }
           >
             {links.map((link) => (
